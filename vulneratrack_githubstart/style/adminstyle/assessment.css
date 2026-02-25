@@ -1,0 +1,286 @@
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-header .title-badge {
+    background: #32467a;
+    color: #ffffff;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 20px 0 0 20px;
+}
+
+.dashboard-header .header-line {
+    flex-grow: 1;
+    height: 3px;
+    background: #32467a;
+    margin-left: 20px;
+    margin-right: 50px;
+}
+
+.assessment-section {
+    margin-bottom: 50px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.assessment-section .section-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333333;
+}
+
+.assessment-section .risk-card {
+    background: #e9ecf3;
+    border: 1.5px solid #b8c2d1;
+    border-radius: 20px;
+    display: flex;
+    padding: 25px;
+    gap: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    align-items: stretch;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.map-placeholder {
+    flex: 0 0 250px;
+    height: 250px;
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#areamap, #housemap {
+    height: 300px; 
+    width: 100%;  
+}
+
+.assessment-data, .houseassessment-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.assessment-data h3, .houseassessment-data h3 {
+    margin-top: 0;
+    font-size: 1rem;
+    color: #333333;
+    margin-bottom: 15px;
+}
+
+.risk-list, .household-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.risk-list li, .household-list li {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #444444;
+    display: flex;
+    justify-content: space-between;
+}
+
+.risk-item, .household-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #444444;
+}
+
+.vul-delete-btn {
+    width: 12px;
+    height: 2px;
+    background-color: #ff4d4d;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-right: 12px; 
+    flex-shrink: 0; 
+}
+
+.vul-delete-btn:hover {
+    background-color: #cc0000;
+    transform: scaleX(1.2);
+}
+
+.risk-list li span, .house-list li span {
+    font-weight: bold;
+}
+
+.risk-footer, .household-footer {
+    margin-top: auto;
+    border-top: 3px solid #333333;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.risk-label, .household-label {
+    color: #ff4d4d;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.risk-score, .household-score {
+    color: #ff4d4d;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.btn-next {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #32467a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: 23px;
+}
+
+
+/* Hover States */
+.btn-next:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* --- Right Column: Tags & Toggles --- */
+.tag-container, .housetag-container {
+    flex: 1.2;
+    background: #ffffff;
+    border: 1.5px solid #b8c2d1;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.search-box {
+    background: #ffffff; 
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    padding: 8px 18px;
+    display: flex;
+    align-items: center;
+    width: 280px;
+    margin-left: auto;
+    margin-right: 23px;
+    margin-bottom: 10px;
+}
+
+.search-box button {
+    border: none;        
+    background: none;   
+    cursor: pointer;    
+    padding: 0;        
+    outline: none;      
+}
+
+.search-box button:hover {
+    color: #007bff;     
+}
+
+.search-box input {
+    border: none;
+    background: transparent;
+    margin-left: 10px;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.tag-grid, .housetag-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.tag, .housetag {
+    background: #dde2eb;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: #555555;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.tag:hover, .housetag:hover {
+    background: #d1d8e2;
+}
+
+.tag span, .housetag span {
+    color: #8da1b9;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* --- Mobile View --- */
+@media (max-width: 900px) {
+    .assessment-section .risk-card {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .risk-card h3{
+        text-align: center;
+    }
+
+    .map-placeholder {
+        flex: 0 0 200px;
+        width: 100%;
+    }
+
+   .dashboard-header {
+        justify-content: center;
+        margin-bottom: 20px;    
+   }
+    .dashboard-header .title-badge {
+        margin: 20px 0 0 0;     
+    }
+
+    .dashboard-header .header-line {
+        display: none;         
+    }
+
+    .search-box {
+    width: 200px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.search-box input {
+    font-size: 0.8rem;
+}
+}

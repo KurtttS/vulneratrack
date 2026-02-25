@@ -1,0 +1,312 @@
+
+
+
+
+/*FOR THE REPORTS!*/
+.report-main-content {
+    flex: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    padding: 100px 50px;      
+}
+.report-container {
+    background: #ffffff;
+    width: 990px;
+    padding: 50px;
+    border-radius: 40px;
+    border: 2px solid #3c4479;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    animation: slideUpFade 0.8s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+
+
+.report-container h1 {
+    text-align: center;
+    color: #303870;
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+.report-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.form-left, .form-right {
+    flex: 1;
+    min-width: 300px;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 15px 36px 15px 20px; 
+    background-color: #d9dbe9; 
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #444;
+    outline: none;
+    margin-bottom: 25px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+
+  
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23444'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: right 22px center; 
+}
+
+.form-body {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    align-items: flex-start; 
+}
+
+.desc-label {
+    display: block;
+    margin-bottom: 15px;
+    color: #303870;
+    font-weight: 600;
+    text-align: left; 
+    padding-left: 5px;
+}
+
+.form-right textarea {
+    height: 235px; 
+    width: 100%;
+    padding: 20px;
+    background-color: #d9dbe9;
+    border-radius: 20px;
+    border: none;
+    resize: none;
+}
+
+.file-upload {
+    position: relative;
+}
+
+.file-upload label {
+    display: inline-block;
+    width: 180px; 
+    text-align: center;
+    background-color: #d9dbe9;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #444;
+    transition: background 0.3s;
+}
+
+.file-upload label:hover {
+    background-color: #c5c7d9;
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0; 
+    width: 180px;
+    height: 100%;
+    cursor: pointer;
+}
+.form-right textarea {
+    height: 220px;
+    resize: none;
+}
+
+.form-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-report-submit {
+    background-color: #303870;
+    color: white;
+    padding: 12px 60px;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-report-submit:hover {
+    transform: scale(1.05);
+    background-color: #4a6cf7;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*emergency*/
+.emergency-main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background: #fdfdfd; 
+    min-height: 71vh;  
+}
+
+
+.hotline-board {
+    background: #4a59b0; 
+    padding: 50px;
+    border-radius: 40px;
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: slideUpFade 0.8s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+
+
+.main-title {
+    color: #ff4d4d; 
+    font-size: 36px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* 911 Section */
+.national-hotline {
+    background: white;
+    padding: 15px 60px;
+    border-radius: 50px;
+    display: inline-block;
+    border: 3px solid #e57373;
+    margin-bottom: 50px;
+}
+
+.national-hotline span {
+    color: #e57373;
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+}
+
+.national-hotline h2 {
+    color: #e57373;
+    font-size: 55px;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Contact Cards Layout */
+.cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+.contact-card {
+    background: white;
+    border-radius: 35px;
+    padding: 35px 20px;
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-card h3 {
+    color: #303870;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.click-text {
+    color: #e57373;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+
+.phone-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #e9ecef; 
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #303870;
+    font-weight: bold;
+    font-size: 24px;
+    width: 90%;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.phone-strip img {
+    height: 30px; 
+    width: auto;
+}
+
+
+.phone-strip:hover {
+    background: #303870;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.address-info {
+    font-size: 12px;
+    color: #333;
+    margin-top: 15px;
+    line-height: 1.4;
+}
+
+.address-info strong {
+    display: block;
+    color: #303870;
+    margin-bottom: 4px;
+}
