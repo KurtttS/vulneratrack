@@ -1,0 +1,247 @@
+/* heads*/
+.header-section {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 0 20px;
+}
+
+.overview-btn {
+    background-color: #303870;
+    color: white;
+    font-size: 21px; 
+    padding: 8px 30px;
+    border-radius: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+.header-line {
+    height: 2px;
+    background-color: #303870;
+    flex: 1;
+    margin-left: 20px;
+}
+
+/*dashboard*/
+.dashboard-grid {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.card {
+    background: #fff;
+    border: 1.5px solid #d9e8f6; 
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card h3 {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 25px; 
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+}
+
+/*for the rows*/
+.top-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.middle-section {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 25px;
+}
+
+/* Side-by-side charts */
+.distribution-col {
+    display: flex;
+    flex-direction: row; 
+    gap: 25px;
+    align-items: stretch; 
+    margin-top: 50px;
+}
+.distribution-col .chart-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 450px; 
+    position: relative; 
+}
+
+.risk-col {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-card p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.stat-card h2 {
+    font-size: 35px;
+    font-weight: 700;
+    color: #222;
+}
+
+.chart-container-flex {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    justify-content: space-between; 
+    width: 100%;
+    flex: 1;
+    padding: 20px 0; 
+}
+
+.pie-placeholder {
+    width: 220px;           
+    height: 220px;          
+    border-radius: 50%;
+    flex-shrink: 0; 
+}
+
+.vulnerable-pie {
+    background: conic-gradient(#5dade2 0% 30%, #1b4f72 30% 70%, #2e86c1 70% 100%);
+}
+
+.total-pie {
+    background: conic-gradient(#82cc7d 0% 65%, #f1c40f 65% 100%);
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: fit-content;
+    align-self: center; 
+    min-height: 80px; 
+    justify-content: center;
+}
+
+.legend-item {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #555;
+    white-space: nowrap;
+}
+
+.dot {
+    height: 12px;          
+    width: 12px;
+    border-radius: 50%;
+    margin-right: 12px;
+    display: inline-block;
+}
+
+/*bar charts*/
+.history-section {
+    display: grid;
+    gap: 25px;
+}
+
+.bar-chart-placeholder {
+    height: 200px;
+    width: 100%;
+    border-bottom: 2px solid #333;
+    border-left: 2px solid #333;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 10px;
+    background-image: linear-gradient(#f0f0f0 1px, transparent 1px);
+    background-size: 100% 40px; 
+    position: relative;
+}
+
+/*bars*/
+.able-bars::before {
+    content: "";
+    width: 100%;
+    height: 80%; 
+    background: repeating-linear-gradient(to right, #82cc7d 0, #82cc7d 20px, transparent 20px, transparent 35px);
+}
+
+.vulnerable-bars::before {
+    content: "";
+    width: 100%;
+    height: 60%;
+    background: repeating-linear-gradient(to right, #f1c40f 0, #f1c40f 20px, transparent 20px, transparent 35px);
+}
+
+
+/*map*/
+.map-box {
+    position: relative;
+    text-align: center;
+}
+
+#statmap {
+    height: 280px; 
+    width: 100%;  
+}
+
+.map-label-overlay {
+    background: #2c3e50;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.map-subtext {
+    color: #e74c3c;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.risk-stats-container {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.count-num {
+    display: block;
+    font-size: 28px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.count-label {
+    font-size: 12px;
+    color: #555;
+}
+
+/*colors for bar*/
+.light-blue { background: #5dade2; }
+.blue { background: #2e86c1; }
+.dark-blue { background: #1b4f72; }
+.green { background: #82cc7d; }
+.yellow { background: #f1c40f; }
+
