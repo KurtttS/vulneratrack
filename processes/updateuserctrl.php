@@ -7,11 +7,17 @@ class updateuserctrl extends updateuser {
     private $email;
     private $dateofbirth;
     private $status;
+    private $address;
     private $password;
     private $confirmpass;
+    private $latitude;
+    private $longitude;
+    private $area;
+    private $contactnum;
 
 
-    public function __construct($userid, $firstname, $lastname, $email, $dateofbirth, $status, $password = null, $confirmpass = null){
+    public function __construct($userid, $firstname, $lastname, $email, $dateofbirth, $status, $address, $contactnum, $latitude, $longitude, $area, 
+    $password = null, $confirmpass = null){
         parent::__construct();
         $this->userid = $userid;
         $this->firstname = $firstname;
@@ -19,6 +25,11 @@ class updateuserctrl extends updateuser {
         $this->email = $email;
         $this->dateofbirth = $dateofbirth;
         $this->status = $status;
+        $this->address = $address;
+		$this->contactnum =  $contactnum;
+        $this->latitude = $latitude;
+        $this->longitude = $longitude;
+        $this->area = $area;
         $this->password = $password;
         $this->confirmpass = $confirmpass;
     }
@@ -37,7 +48,12 @@ class updateuserctrl extends updateuser {
             $this->email,
             $this->dateofbirth,
             $this->status,
-            $this->password 
+            $this->address,
+            $this->contactnum,
+            $this->latitude,
+            $this->longitude,
+            $this->area,
+            $this->password
         );
     }
 

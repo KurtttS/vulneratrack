@@ -10,15 +10,17 @@ class reportctrl extends reportingclass {
     private $files;
     private $householdID;
     private $report_address;
+    private $located;
 
 
-    public function __construct($type, $description, $files, $householdID, $report_address) {
+    public function __construct($type, $description, $files, $householdID, $report_address, $located) {
         parent::__construct();
         $this->type = $type;
         $this->description = $description;
         $this->files = $files;
         $this->householdID = $householdID;
         $this->report_address = $report_address;
+         $this->located = $located;
     }
 
     public function submitReport() {
@@ -28,6 +30,7 @@ class reportctrl extends reportingclass {
             exit();
         }
 
+        
         $storedFiles = $this->uploadFiles();
 
         $this->createReport(
@@ -35,7 +38,8 @@ class reportctrl extends reportingclass {
             $this->description,
             $storedFiles,
             $this->householdID,
-            $this->report_address
+            $this->report_address,
+             $this->located
         );
     }
 

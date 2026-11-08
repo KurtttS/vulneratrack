@@ -31,7 +31,7 @@
 </a>
 
             <h2>Create an account</h2>  
-            <p>Fill up the fields.</p>
+            <p>Please fill up all fields.</p>
             <form class="signupstart-form" action="../router/loginregrouter.php" method="POST">
                 <input type="Email" name="email" placeholder="Email" required>
        <div class="password-wrapper">
@@ -65,7 +65,7 @@
             <button type="button" onclick="closeModal()" class="btn login" style="width:100%">Understood</button>
         </div>
     </div>
-
+  <footer class = "logfoot"> Copyright © 2026 Vulneratrack All Rights Reserved </footer>
     <script src="../js/signup.js"></script>
 
 </body>

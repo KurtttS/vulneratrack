@@ -18,9 +18,16 @@
 .dashboard-header .header-line {
     flex-grow: 1;
     height: 3px;
-    background: #32467a;
+    background: #1d294a;
     margin-left: 20px;
     margin-right: 50px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #32467a;
+    margin: 0;
 }
 
 .assessment-section {
@@ -28,32 +35,46 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
-.assessment-section .section-title {
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333333;
-}
-
 .assessment-section .risk-card {
-    background: #e9ecf3;
-    border: 1.5px solid #b8c2d1;
+    background: #ffffff;
     border-radius: 20px;
     display: flex;
+    flex-wrap: wrap;
     padding: 25px;
     gap: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.05);
     align-items: stretch;
     margin-left: 20px;
     margin-right: 20px;
+    animation: moveUpFade 0.8s ease-out both;
+}
+
+.card-header-content {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+}
+
+@keyframes moveUpFade {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .map-placeholder {
     flex: 0 0 250px;
     height: 250px;
     background: #ffffff;
-    border: 1px solid #cccccc;
+    border: 1px solid #0d2f60;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -87,7 +108,7 @@
 .risk-list li, .household-list li {
     margin-bottom: 12px;
     font-size: 0.95rem;
-    color: #444444;
+    color: #0d2f60;
     display: flex;
     justify-content: space-between;
 }
@@ -98,13 +119,13 @@
     align-items: center;
     margin-bottom: 12px;
     font-size: 0.95rem;
-    color: #444444;
+    color: #0d2f60;
 }
 
 .vul-delete-btn {
-    width: 12px;
-    height: 2px;
-    background-color: #ff4d4d;
+    background-color: white;
+    font-weight: bold;
+    color: #ff4d4d;
     border: none;
     padding: 0;
     cursor: pointer;
@@ -113,7 +134,7 @@
 }
 
 .vul-delete-btn:hover {
-    background-color: #cc0000;
+    background-color: #e8bfbf;
     transform: scaleX(1.2);
 }
 
@@ -143,31 +164,29 @@
 }
 
 .btn-next {
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  background-color: #32467a;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 5px;
-  margin-left: auto;
-  margin-right: 23px;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #32467a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.btn-next i {
+ margin-right: 6px;
 }
 
 
-/* Hover States */
 .btn-next:hover {
   background-color: #0056b3;
   transform: translateY(-1px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
 
 /* --- Right Column: Tags & Toggles --- */
 .tag-container, .housetag-container {
@@ -187,9 +206,6 @@
     display: flex;
     align-items: center;
     width: 280px;
-    margin-left: auto;
-    margin-right: 23px;
-    margin-bottom: 10px;
 }
 
 .search-box button {
@@ -220,7 +236,7 @@
 }
 
 .tag, .housetag {
-    background: #dde2eb;
+    background: #32467a;
     border: none;
     padding: 8px 12px;
     border-radius: 20px;
@@ -230,13 +246,13 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    color: #555555;
+    color: white;
     font-weight: 500;
     transition: background 0.2s;
 }
 
 .tag:hover, .housetag:hover {
-    background: #d1d8e2;
+    background: #285da7;
 }
 
 .tag span, .housetag span {
@@ -246,6 +262,38 @@
     margin-left: 5px;
 }
 
+.custom-alert{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 220px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.25s ease;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* show animation */
+.custom-alert.show{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* color box types */
+.custom-alert.success{
+    background: #2ecc71;
+}
+
+.custom-alert.error{
+    background: #e74c3c;
+}
+
 /* --- Mobile View --- */
 @media (max-width: 900px) {
     .assessment-section .risk-card {
@@ -253,7 +301,12 @@
         gap: 15px;
     }
 
-    .risk-card h3{
+    .card-header-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .section-title {
         text-align: center;
     }
 
@@ -275,12 +328,10 @@
     }
 
     .search-box {
-    width: 200px;
-    margin-right: 15px;
-    margin-bottom: 10px;
-}
+        width: 100%;
+    }
 
-.search-box input {
-    font-size: 0.8rem;
-}
+    .search-box input {
+        font-size: 0.8rem;
+    }
 }

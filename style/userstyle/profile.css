@@ -9,14 +9,14 @@
     min-height: 100vh;
 }
 
-/* 2. The Blue Header Section */
+/*blue Header Section */
 .blue-bg {
     background-color: #6a79d3;
     padding: 40px 0 0 0; 
     margin: 0; 
 }
 
-/* 3. The White Profile Card */
+/* white Profile Card */
 .white-profile {
     background-color: white;
     border-radius: 12px;
@@ -58,9 +58,19 @@
     margin-top: 2px; 
 }
 
-.high-risk {
-    color: #ea2b2b;
-    font-weight: bold;
+#riskText.risk-low{
+    color: #2ecc71 !important; 
+    font-weight: 600 !important;
+}
+
+#riskText.risk-medium{
+    color: #f1c40f !important; 
+    font-weight: 600 !important;
+}
+
+#riskText.risk-high{
+    color: #e74c3c !important; 
+    font-weight: 600 !important;
 }
 
 .code {
@@ -169,22 +179,22 @@
     font-size: 10px;
 }
 
-
-
-
-
-
-
 }
 
-
-
+/* Display location */
+.profile-map-edit {
+    display: none;
+}
+#profile-map { 
+    height: 200px; 
+    width: 100%; 
+    border-radius: 10px;
+}
 
 
 /* ===================== */
 /* PROFILE */
 /* ===================== */
-
 
 
 /* Form & Detail Stuffs */
@@ -203,15 +213,23 @@
     gap: 80px;
      margin-top: 60px;
 }
+.area-card {
+        background: #f7f7f7;
+    border: 1px solid #303870;
+    border-radius: 15px;
+    padding: 20px;
+
+}
 
 .sidebar-card {
-    background: white;
+    background: #ffffff;
     border: 1px solid #303870;
     border-radius: 15px;
     padding: 20px;
     box-shadow: 4px 4px 0px rgba(48, 56, 112, 0.1);
      animation: slideUpFade 0.8s ease-out forwards;
 }
+
 
 @keyframes slideUpFade {
     from {
@@ -224,11 +242,15 @@
     }
 }
 
-.sidebar-card h3 {
+.sidebar-card h3,  .area-card h3 {
     color: #303870;
     text-align: center;
     font-size: 18px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#locTitle {
+    margin-top: 20px;
 }
 
 .sidebar-divider {
@@ -238,11 +260,14 @@
     margin: 0 auto 15px;
 }
 
-.sidebar-card p {
+
+
+.sidebar-card p, .area-card label {
     font-size: 14px;
     color: #303870;
     font-weight: 600;
     display: flex;
+    margin-bottom: 30px;
     justify-content: space-between;
 }
 
@@ -339,7 +364,6 @@ background-color: #5066e0;
 
 
 
-
 .profiles-select-field {
    border: 1px solid #303870 !important;
     border-radius: 15px; 
@@ -351,7 +375,7 @@ background-color: #5066e0;
       appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-
+    
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23444'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-size: 20px;
@@ -447,7 +471,7 @@ background-color: #5066e0;
         font-size: 12px;
         margin-bottom: 6px;
         display: block;      
-         margin: 0 auto;  
+         margin-left: 50px;  
     }
 
  .profiles-input-field,
@@ -770,6 +794,27 @@ background-color: #5066e0;
 }
 
 @media (max-width: 578px) {
+
+.white-profile {
+    max-width: 95%;
+}
+
+.switch-tabs {
+    max-width: 93%;
+    font-size: 12px;
+}
+
+.status {
+    font-size: 12px;
+}
+
+.profile-name {
+    font-size: 15px;
+}
+.btn-out {
+display: none;
+}
+
     /* LEFT SIDE */
 .privacy-content {
   display: flex;
@@ -780,14 +825,14 @@ background-color: #5066e0;
 
 /* Head Title (Privacy Policy top) */
 .privacy-title h1 {
-    font-size: 25px;
+    font-size: 40px;
     font-weight: 700;
     color: #2e3a6d;
     margin-bottom: 8px;
 }
 
 .privacy-title p {
-    font-size: 10px;
+    font-size: 15px;
     color: #2e3a6d;
     line-height: 1.6;
     margin: 4px 0;
@@ -796,7 +841,7 @@ background-color: #5066e0;
 /* Section Titles */
 
 .privacy-content h2 {
-    font-size: 20px;
+    font-size: 30px;
     font-weight: 700;
     margin-top: 25px;
     margin-bottom: 8px;
@@ -804,7 +849,7 @@ background-color: #5066e0;
 
 /* Paragraph text */
 .privacy-content p {
-    font-size: 10px;
+    font-size: 17px;
     line-height: 1.7;
     margin-bottom: 10px;
 }
@@ -816,7 +861,7 @@ background-color: #5066e0;
 }
 
 .privacy-content li {
-    font-size: 10px;
+    font-size: 17px;
     line-height: 1.6;
     margin-bottom: 5px;
 }
@@ -940,11 +985,36 @@ display: none;
 }
 
 
-
-
 .noreps {
     text-align: center;
     color: gray;
         font-family: 'Poppins', sans-serif;
         font-size: 12px;
+}
+
+/*HISTORY*/
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: white;
+}
+
+/* VERIFIED = GREEN */
+.status-badge.resolved {
+    background-color: #28a745; /* green */
+}
+
+/* UNVERIFIED = RED */
+.status-badge.unverified {
+    background-color: #dc3545; /* red */
+}
+
+/* PENDING = YELLOW */
+.status-badge.ongoing {
+    background-color: #ffc107; /* yellow */
+    color: #333; /* darker text for readability */
 }

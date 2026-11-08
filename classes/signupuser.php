@@ -1,6 +1,6 @@
 <?php
     class signupuser extends database {
-        protected function setUser($firstname,$lastname,$address,$email,$password,$dateofbirth,$birthcert,$userstatus,
+        protected function setUser($firstname,$lastname,$address,$email,$password,$dateofbirth,$birthcert,$userstatus,$contactnum,
         $householdmode,$joincode,$longitude,$latitude,$area){
             
         $db = $this->getConnection();
@@ -9,12 +9,12 @@
                     $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
                     $now = $now->format('Y-m-d H:i:s');
 
-                    $stmt = $db->prepare('INSERT INTO  `user` (First_Name, Last_Name, `Address`, Email, Password_Hashed, User_Type, Date_Created, Date_Updated, Date_of_Birth, Birth_Certificate, User_Status) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                    $stmt = $db->prepare('INSERT INTO  `user` (First_Name, Last_Name, `Address`, Email, Password_Hashed, User_Type, Date_Created, Date_Updated, Date_of_Birth, Birth_Certificate, User_Status, Contact_Number) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
                     $hashedpass = password_hash($password, PASSWORD_DEFAULT);
                     $stmt->execute(array($firstname,$lastname,$address,$email,$hashedpass,'user',
-                    $now,$now,$dateofbirth,$birthcert,$userstatus));
+                    $now,$now,$dateofbirth,$birthcert,$userstatus,$contactnum));
 
                     $newUserId = $db->lastInsertId(); 
 
@@ -25,7 +25,7 @@
                     if ($area==='East Homes'){
                         $areaID = 2;
                     }
-                    if ($area==='Mandalagan, Bacolod City'){
+                    if ($area==='Purok Carvic'){
                         $areaID = 3;
                     }
                     if ($householdmode === "create"){
@@ -56,12 +56,23 @@
                     $riskStmt = $db->prepare($riskSql);
                     $riskStmt->execute([$areaID]);
                     $areaRisks = $riskStmt->fetchAll(PDO::FETCH_ASSOC);
-
                     $houseriskSql = "SELECT * FROM vulnerability WHERE Household_ID = ?";
                     $houseriskStmt = $db->prepare($houseriskSql);
                     $houseriskStmt->execute([$targetHouseholdID]);
                     $houseRisks = $houseriskStmt->fetchAll(PDO::FETCH_ASSOC);
-                    
+
+                    //Get area name
+                    $areanameSql = "SELECT Area_Name FROM area WHERE AreaID = ?";
+                    $areanameStmt = $db->prepare($areanameSql);
+                    $areanameStmt->execute([$areaID]);
+                    $areaName = $areanameStmt->fetchColumn();
+
+                    //Get household location
+                    $houselocSql = "SELECT CoordinateX, CoordinateY FROM household WHERE HouseholdID = ?";
+                    $houselonglat = $db->prepare($houselocSql);
+                    $houselonglat->execute([$targetHouseholdID]);
+                    $houseLocation = $houselonglat->fetch(PDO::FETCH_ASSOC);
+
                     //gets user details
                     $fetchStmt = $db->prepare('SELECT u.*, m.Household_ID FROM `user` u LEFT JOIN `member` m ON u.UserID = m.User_ID WHERE u.UserID = ?');
                     $fetchStmt->execute([$newUserId]);
@@ -70,7 +81,9 @@
                         "user" => $userDetails,
                         "household_members" => $householdMembers,
                         "area_risks" => $areaRisks,
-                        "house_risks" => $houseRisks
+                        "house_risks" => $houseRisks,
+                        "house_location" => $houseLocation,
+                        "area_name" => $areaName
                     ];
                 }
                 catch (Exception $e) {

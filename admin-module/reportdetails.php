@@ -13,9 +13,6 @@ if (!$report) {
 }
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +51,8 @@ if (!$report) {
     </a>
 </div>
 
+<div class="stepper-container">
+    <h2>Update Status (Click to update)</h2>
   <div class="status-stepper" data-id="<?= $report['ReportID'] ?>">
 
     <div class="step status-btn" data-status="unverified">
@@ -74,7 +73,7 @@ if (!$report) {
         <span class="step-label">Resolved</span>
         <div class="step-number <?= $report['report_status']=='resolved'?'active':'' ?>">3</div>
     </div>
-
+    </div>
     </div>
 
 
@@ -98,7 +97,7 @@ if (!$report) {
 
             <div class="info-group">
                 <span class="info-label">Address</span>
-                <div class="info-box"><?= htmlspecialchars($report['report_address']) ?></div>
+                <div class="info-box"><?= htmlspecialchars($report['located']) ?></div>
             </div>
         </div>
 

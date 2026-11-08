@@ -32,6 +32,35 @@ class pointsystemctrl extends pointsystem {
         echo json_encode(['status' => $success ? 'success' : 'error']);
         exit;
     }
+
+    public  function tofetchcontacts($householdID){
+        $contactinfo = $this->fetchhouseholdcontacts($householdID);
+        $numbers = [];
+
+            foreach ($contactinfo as $row) {
+                $num = $row['Contact_Number'];
+                if (strpos($num, '0') === 0) {
+                    $num = '63' . substr($num, 1);
+                }
+                $numbers[] = $num;
+            }
+            return array_unique($numbers);
+    }
+
+    public  function tofetchareacontacts($areaID){
+        $contactinfo = $this->fetchareacontacts($areaID);
+        $numbers = [];
+
+            foreach ($contactinfo as $row) {
+                $num = $row['Contact_Number'];
+                if (strpos($num, '0') === 0) {
+                    $num = '63' . substr($num, 1);
+                }
+                $numbers[] = $num;
+            }
+            return array_unique($numbers);
+    }
+
 //Shared function
      public function vulnerabilityToDelete($id) {
         $result = $this->deleteVulnerabilityRecord($id);

@@ -29,16 +29,20 @@
         <div class="adminpage-container">
 <div class="assessment-container">
     <div class="dashboard-header">
-        <div class="title-badge">Point System</div>
+        <div class="title-badge">Vulnerabilities</div>
         <div class="header-line"></div>
     </div>
 
     <div class="assessment-section">
-        <h2 class="section-title">Area Assessment</h2>
-            <button class="btn-next">
-                Next
-            </button>
         <div class="risk-card">
+            <div class="card-header-content">
+                <h2 class="section-title">Area Assessment</h2>
+                <button class="btn-next">
+                      <i class="fa-solid fa-location-dot"> </i>
+                     Next Area
+                </button>
+            </div>
+
             <div class="map-placeholder">
                 <div id="areamap"></div>
             </div>
@@ -61,12 +65,17 @@
     </div>
 
     <div class="assessment-section">
-        <h2 class="section-title">Household Assessment</h2>
-        <div class="search-box">
-                    <button onclick="searchByHousehold()"><i class="fas fa-search"></i></button>
-                    <input type="text" id="householdSearch" placeholder="Search...">
-                </div>
         <div class="risk-card">
+            <div class="card-header-content">
+                <h2 class="section-title">Household Assessment</h2>
+                <form onsubmit="event.preventDefault(); searchByHousehold();">
+                    <div class="search-box">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                        <input type="text" id="householdSearch" placeholder="Enter Household ID...">
+                    </div>
+                 </form>
+            </div>
+
             <div class="map-placeholder">
                 <div id="housemap"></div>
             </div>
@@ -83,7 +92,7 @@
 
             <div class="housetag-container">
                 <div class="housetag-grid">
-                    <button class = "housetag">Power Outage<span>+</span></button>
+                    <button class = "housetag">Road potholes<span>+</span></button>
                     <button class = "housetag">Blocked Road<span>+</span></button>
                     <button class = "housetag">Clogged Canals<span>+</span></button>
                     <button class = "housetag">Standing Water<span>+</span></button>
@@ -100,6 +109,11 @@ $path_to_root = "../";
         include '../nav/footer.php'; ?>
 </div>
 </div>
+
+        <div id="customAlert" class="custom-alert">
+            <span id="customAlertText"></span>
+        </div>
+
     <script src="../js/assessment.js"></script>
 
 </body>

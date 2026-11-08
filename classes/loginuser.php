@@ -27,6 +27,12 @@
                         $areaID = $areaRow['Area_ID'] ?? null;
                     }
 
+                    //Get area name
+                    $areanameSql = "SELECT Area_Name FROM area WHERE AreaID = ?";
+                    $areanameStmt = $db->prepare($areanameSql);
+                    $areanameStmt->execute([$areaID]);
+                    $areaName = $areanameStmt->fetchColumn();
+
                     //Get household Members
                     $householdMembers = [];
                     if ($householdID) {
@@ -57,11 +63,19 @@
                         $houseRisks = $hRiskStmt->fetchAll(PDO::FETCH_ASSOC);
                     }
 
+                    //Get household location
+                    $houselocSql = "SELECT CoordinateX, CoordinateY FROM household WHERE HouseholdID = ?";
+                    $houselonglat = $db->prepare($houselocSql);
+                    $houselonglat->execute([$householdID]);
+                    $houseLocation = $houselonglat->fetch(PDO::FETCH_ASSOC);
+
                     return [
                         "user" => $check,
                         "household_members" => $householdMembers,
                         "area_risks" => $areaRisks,
-                        "house_risks" => $houseRisks
+                        "house_risks" => $houseRisks,
+                        "house_location" => $houseLocation,
+                        "area_name" => $areaName
                     ];
                 } 
                 else {

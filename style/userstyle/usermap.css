@@ -1,5 +1,5 @@
 #map { 
-    height: 950px; 
+    height: 800px; 
 }
 
 .map-menu-container {
@@ -13,10 +13,10 @@
 
 .menu-btn {
     display: block;
-    width: 100%;
+    width: 150px;
     margin-bottom: 5px;
     padding: 8px 12px;
-    background-color: #4a6cf7;
+    background-color: gray;
     color: white;
     border: none;
     border-radius: 4px;
@@ -25,10 +25,14 @@
     transition: background 0.3s;
 }
 
-.menu-btn:hover {
-    background-color: #4351be;
+.highlighted-btn {
+    background-color: #3a5ada !important; 
+    border-radius: 4px;
 }
 
+h4 {
+    font-size: 14px;
+}
 .map-route-container {
     background: white;
     padding: 20px;
@@ -52,36 +56,106 @@
     font-weight: bold;
     transition: background 0.3s;
 }
-
+.leaflet-routing-container {
+    display: none !important;
+}
 .route-btn:hover {
     background-color: #4351be;
 }
 
 @media (max-width: 768px) {
-#map { 
-    height: 750px; 
+    html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden; /* This completely disables page scrolling */
+}
+
+    .user-map {
+        height: 100vh; 
+    }
+
+    #map { 
+        height: 100%; 
+        width: 100%;
+    }
+
+    .map-menu-container, .map-route-container {
+        padding: 5px;
+        font-size: 10px;
+    }
+
+    .menu-btn, .route-btn {
+        padding: 6px;
+        font-size: 10px;
+    }
+    
+    .footer {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1280px) {   
+    html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden; 
+}
+
+    .user-map {
+        height: 100vh; 
+    }
+
+    #map { 
+        height: 100%; 
+        width: 100%;
+    }
+
+    .map-menu-container, .map-route-container {
+        padding: 20px;
+        font-size: 15px;
+    }
+
+    .menu-btn, .route-btn {
+        padding: 14px;
+        font-size: 15px;
+    }
+    
+    .footer {
+        display: none;
+    }
 }
 
 
-.map-menu-container {
-    padding:7px;
-    border-radius: 8px;
-}
+@media screen and (min-height: 1366px) {   
+        html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden; 
+    }
 
-.menu-btn {
-    margin-bottom: 5px;
-    padding: 4px 8px;
-}
+    .user-map {
+        height: 100vh; 
+    }
 
-.map-route-container {
-    padding: 7px;
-    border-radius: 8px;
-}
+    #map { 
+        height: 100%; 
+        width: 100%;
+    }
 
+    h4 {
+        font-size: 28px;
+    }
+    .map-menu-container, .map-route-container {
+        padding: 20px;
+        font-size: 25px;
+    }
 
-.route-btn {
-    margin-bottom: 5px;
-    padding: 4px 8px;
-    border-radius: 4px;
-}
+    .menu-btn, .route-btn {
+        padding: 14px;
+        font-size: 25px;
+    }
+    
+    .footer {
+        display: none;
+    }
 }

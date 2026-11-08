@@ -101,7 +101,8 @@
 
 
 .menu-btn:hover, .menu-btn.active {
-    background-color: #dcdde1; 
+    background-color: #3b4b95; 
+    color: white;
 }
 
 
@@ -174,6 +175,10 @@
     border-top: 2px solid #000;
     color: red;
     font-weight: bold;
+}
+
+.area-container h3{
+    color: #1a237e;
 }
 
 .details-btn {

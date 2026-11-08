@@ -51,9 +51,54 @@ body {
     margin: 0 0 10px 0;
 }
 
-.risk {
-    color: #ff4d4d;
-    font-weight: bold;
+#riskText.risk-low{
+    color: #2ecc71 !important; /* green */
+    font-weight: 600 !important;
+}
+
+#riskText.risk-medium{
+    color: #f1c40f !important; /* yellow */
+    font-weight: 600 !important;
+}
+
+#riskText.risk-high{
+    color: #e74c3c !important; /* red */
+    font-weight: 600 !important;
+}
+
+/* common highlight look */
+#riskText.highlight{
+    padding:4px 10px;
+    border-radius:8px;
+    animation:riskPulse 1.2s ease-in-out 3;
+}
+
+/* pulse color controlled by CSS variable */
+#riskText{
+    --pulse-color: rgba(239,68,68,0.7);
+}
+
+/* dynamic pulse */
+@keyframes riskPulse{
+    0%   { box-shadow:0 0 0 0 var(--pulse-color); }
+    70%  { box-shadow:0 0 0 25px rgba(0,0,0,0); }
+    100% { box-shadow:0 0 0 0 rgba(0,0,0,0); }
+}
+
+/* match pulse color per risk */
+#riskText.low{
+    --pulse-color: rgba(34,197,94,0.6);
+    background: rgba(34,197,94,0.12);
+}
+
+#riskText.medium{
+    --pulse-color: rgba(250,204,21,0.6);
+    background: rgba(250,204,21,0.12);
+}
+
+#riskText.high{
+    --pulse-color: rgba(239,68,68,0.6);
+    background: rgba(239,68,68,0.12);
 }
 
 .user-right {
@@ -70,7 +115,7 @@ body {
     right: 0;
     top: 10px; 
     width: 70%; 
-    height: 350px; 
+    height: 330px; 
     background: white;
     border-top-left-radius: 150px; 
     border-bottom-left-radius: 150px;
@@ -135,7 +180,7 @@ body {
 .user-card h2 {
     color: #2c3e91;
     margin-bottom: 15px;
-    font-size: 50px;
+    font-size: 40px;
 }
 
 .user-card p {
@@ -189,6 +234,54 @@ body {
     height: auto;
 }
 
+
+/* dots */
+.slider-dots{
+    position:absolute;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    z-index:40;
+}
+
+.slider-dots .dot{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#c7cdf7;
+    cursor:pointer;
+    transition:transform .2s ease, background .2s ease;
+}
+
+.slider-dots .dot.active{
+    background:#2c3e91;
+    transform:scale(1.3);
+}
+
+
+/* soft fade per slide */
+.user-card{
+    opacity:.4;
+    transition:opacity .4s ease;
+}
+
+.user-card.active{
+    opacity:1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /*concerns*/
 .concerns {
     text-align: center;
@@ -201,6 +294,7 @@ body {
     color: #ffffff;
     margin-bottom: 0;
     z-index: 1;
+    
    
 }
 
@@ -304,7 +398,7 @@ body {
 /*stats*/
 .statistics {
     padding: 40px 80px 80px 80px; 
-    margin-top: -10px; 
+    margin-top: 40px; 
     background-color: #ffffff;
     text-align: center;
 }
@@ -340,7 +434,7 @@ body {
     min-width: 280px;
     height: 180px;
     background: #ffffff;
-    border: 2px solid #5c6bd6; 
+    border: 1px solid #e0e4ff; 
     border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
@@ -349,6 +443,8 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .box i { font-size: 24px; color: #303870; margin-bottom: 5px; }
@@ -364,9 +460,9 @@ body {
 .box p { font-size: 14px; font-weight: 600; color: #303870; margin: 5px 0 0; }
 
 .box:hover {
-    transform: translateY(-8px);
-    border-color: #303870;
-    box-shadow: 0 12px 25px rgba(48, 56, 112, 0.15);
+     transform: translateY(-5px);
+    border-color: #4f46e5;
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1);
 }
 
 
@@ -412,6 +508,7 @@ body {
     color: #3441a1; 
     margin-bottom: 12px;
     line-height: 1.3;
+     font-family: 'Poppins', sans-serif;
 }
 
 .mainbox p {
@@ -420,6 +517,7 @@ body {
     line-height: 1.6;
     margin-bottom: 25px;
     flex-grow: 1; 
+     font-family: 'Poppins', sans-serif;
 }
 
 
@@ -435,6 +533,7 @@ body {
     transition: background 0.2s ease;
     width: auto; 
     min-width: 120px;
+     font-family: 'Poppins', sans-serif;
 }
 
 .btnmain:hover {
@@ -454,14 +553,218 @@ body {
 /*animation*/
 
 
-.box, .mainbox, .card {
+.box, .mainbox, .card, .hotline-board, .contact-card {
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.6s ease-out; /
 }
 
 
-.box.show, .mainbox.show, .card.show {
+.box.show, .mainbox.show, .card.show, .hotline-board.show, .contact-card.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+
+
+/*emergency*/
+.emergency-main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+
+    background-image: url('/style/imgs/emergency.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    min-height: 71vh;
+
+    position: relative;   /* IMPORTANT for ::before */
+    overflow: hidden;
+}
+
+.emergency-main-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: rgba(60, 68, 121, 0.85);
+
+    z-index: 1;
+}
+
+.hotline-board {
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 40px;
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+
+    z-index: 1001;
+}
+
+
+
+
+.main-title {
+    color: #ff4d4d; 
+    font-size: 36px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+     font-family: 'Poppins', sans-serif;
+}
+
+/* 911 Section */
+.national-hotline {
+    background: white;
+    padding: 15px 60px;
+    border-radius: 50px;
+    display: inline-block;
+    border: 3px solid #e57373;
+    margin-bottom: 50px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+.national-hotline:hover {
+    transform: translateY(-5px);
+    border-color: #cf6363;
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1);
+}
+.national-hotline span {
+    color: #e57373;
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+}
+
+.national-hotline h2 {
+    color: #e57373;
+    font-size: 55px;
+    margin: 0;
+    line-height: 1;
+     font-family: 'Poppins', sans-serif;
+}
+
+/* Contact Cards Layout */
+.cards-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+.contact-card {
+    background: #ffffff;
+    border-radius: 35px;
+    padding: 35px 20px;
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+        border: 1px solid #e0e4ff; 
+         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    border-color: #4f46e5;
+    box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.1);
+}
+
+.contact-card h3 {
+    color: #4a59b0;
+    font-size: 22px;
+    margin-bottom: 5px;
+     font-family: 'Poppins', sans-serif;
+}
+
+.click-text {
+    color: #e57373;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 15px;
+     font-family: 'Poppins', sans-serif;
+}
+
+
+.phone-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #ffffff; 
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #303870;
+    font-weight: bold;
+    font-size: 24px;
+    width: 90%;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      border: 2px solid #e0e4ff; 
+         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.phone-strip img {
+    height: 30px; 
+    width: auto;
+}
+
+.ninewanwan {
+    text-decoration: none;
+    
+}
+
+.phone-strip:hover {
+    background: #303870;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.address-info {
+    font-size: 12px;
+    color: #4a59b0;
+    margin-top: 15px;
+    line-height: 1.4;
+     font-family: 'Poppins', sans-serif;
+}
+
+.address-info strong {
+    display: block;
+    color: #4a59b0;
+    margin-bottom: 4px;
+     font-family: 'Poppins', sans-serif;
+}
+
+#loc{
+      color: #ffffff;
+}
+
+@media (max-width: 420px) {
+
+  .contact-card{
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hotline-board{
+    padding: 25px 15px;
+  }
+
+  .phone-strip{
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 18px;
+  }
+
 }

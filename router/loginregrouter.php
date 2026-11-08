@@ -42,6 +42,7 @@
         $dateofbirth = $_POST["dateofbirth"];
         $birthcert = $_POST["birthcert"];
         $userstatus = $_POST["status"];
+        $contactnum = $_POST["contactnum"];
         $householdmode  = $_SESSION["signup"]["householdmode"];
         $joincode  = $_SESSION["signup"]["joincode"];
         $longitude = $_POST["longitude"];
@@ -56,12 +57,13 @@
         include __DIR__ . "/../classes/userrepository.php";
         include __DIR__ . "/../processes/repositoryctrl.php";
 
-        $signup = new signupuserctrl($firstname,$lastname,$address,$email,$password,$confirmpass,$dateofbirth,$birthcert,$userstatus,
+        $signup = new signupuserctrl($firstname,$lastname,$address,$email,$password,$confirmpass,$dateofbirth,$birthcert,$userstatus,$contactnum,
         $householdmode,$joincode,$longitude,$latitude,$area);
         $userData = $signup->signupuser();
 
         if ($userData){
             $user = $userData['user'];
+            $householdloc = $userData['house_location'];
 
             $_SESSION["userid"] = $user['UserID'];
             $_SESSION["firstName"] = $user['First_Name'];
@@ -74,17 +76,18 @@
             $_SESSION["dateofbirth"] = $user['Date_of_Birth'];
             $_SESSION["birthcert"] = $user['Birth_Certificate'];
             $_SESSION["status"] = $user['User_Status'];
+            $_SESSION["contactnum"] = $user['Contact_Number'];
             $_SESSION["householdid"] = $user['Household_ID'];
-            
             $_SESSION["household_members"] = $userData['household_members'];
             $_SESSION["area_risks"]        = $userData['area_risks'];
             $_SESSION["house_risks"]       = $userData['house_risks'];
-
+            $_SESSION["area_name"] = $userData['area_name'];
             $userRepo = new repositoryctrl();
             $result = $userRepo->calculateGrade($userData['area_risks'], $userData['house_risks']);
-
             $_SESSION["total_points"] = $result['total_points'];
             $_SESSION["risk_grade"]   = $result['grade'];
+            $_SESSION["latitude"] = $householdloc['CoordinateX'];
+            $_SESSION["longitude"]   = $householdloc['CoordinateY'];
 
             }
             
@@ -110,6 +113,7 @@
 
         if ($userData){
             $user = $userData['user'];
+            $householdloc = $userData['house_location'];
 
             $_SESSION["userid"] = $user['UserID'];
             $_SESSION["firstName"] = $user['First_Name'];
@@ -122,18 +126,20 @@
             $_SESSION["dateofbirth"] = $user['Date_of_Birth'];
             $_SESSION["birthcert"] = $user['Birth_Certificate'];
             $_SESSION["status"] = $user['User_Status'];
+            $_SESSION["contactnum"] = $user['Contact_Number'];
             $_SESSION["householdid"] = $user['Household_ID'];
-            
             $_SESSION["household_members"] = $userData['household_members'];
-            $_SESSION["area_risks"]        = $userData['area_risks'];
-            $_SESSION["house_risks"]       = $userData['house_risks'];
-            
+            $_SESSION["area_risks"] = $userData['area_risks'];
+            $_SESSION["house_risks"] = $userData['house_risks'];
+            $_SESSION["latitude"] = $householdloc['CoordinateX'];
+            $_SESSION["longitude"]  = $householdloc['CoordinateY'];
+            $_SESSION["area_name"] = $userData['area_name'];
             $userRepo = new repositoryctrl();
             $result = $userRepo->calculateGrade($userData['area_risks'], $userData['house_risks']);
 
             $_SESSION["total_points"] = $result['total_points'];
             $_SESSION["risk_grade"]   = $result['grade'];
-            
+
             $_SESSION["risk_assessment"] = $riskData;
                 if($_SESSION["usertype"]==='user') {
                 header("location: ../user-module/home.php?login=success");

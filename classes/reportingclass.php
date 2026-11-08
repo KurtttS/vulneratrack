@@ -9,13 +9,14 @@ class reportingclass extends database {
         $description,
         $images,
         $householdID,
-        $report_address
+        $report_address,
+        $located
     ) {
 
         $stmt = $this->getConnection()->prepare(
             "INSERT INTO report
-            (Date_Sent, Report_Message, Type_of_Problem, Report_Image, Household_ID, report_address, report_status)
-            VALUES (NOW(), ?, ?, ?, ?, ?, 'unverified')"
+            (Date_Sent, Report_Message, Type_of_Problem, Report_Image, Household_ID, report_address, report_status, located)
+            VALUES (NOW(), ?, ?, ?, ?, ?, 'unverified', ?)"
         );
 
         $stmt->execute([
@@ -23,7 +24,8 @@ class reportingclass extends database {
             $type,
             $images,
             $householdID,
-            $report_address
+            $report_address,
+            $located
         ]);
     }
 
@@ -41,10 +43,7 @@ class reportingclass extends database {
         return $stmt->fetchAll();
     }
 
-    /* ===============================
-       DELETE
-       =============================== */
-
+    /* DELETE */
     protected function deleteReportById($id)
     {
         $stmt = $this->getConnection()->prepare(
@@ -57,6 +56,15 @@ class reportingclass extends database {
     public function deleteReport($id)
     {
         return $this->deleteReportById($id);
+    }
+
+    public function getAllReports()
+    {
+        $stmt = $this->getConnection()->prepare(
+            "SELECT * FROM report ORDER BY Date_Sent DESC"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
 }

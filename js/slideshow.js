@@ -1,4 +1,4 @@
-let currentIndex = 0;
+
 
 function moveSlide(direction) {
     const slider = document.getElementById('slider');
@@ -72,7 +72,79 @@ document.addEventListener("DOMContentLoaded", () => {
         threshold: 0.1 
     });
 
-    const hiddenElements = document.querySelectorAll('.mainbox, .box, .card');
+    const hiddenElements = document.querySelectorAll('.mainbox, .box, .card, .hotline-board, .contact-card');
     
     hiddenElements.forEach((el) => animate.observe(el));
 });
+
+
+
+
+let currentIndex = 0;
+let autoSlide;
+let slides;
+let dots;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    slides = document.querySelectorAll('.user-card');
+
+    const dotsContainer = document.getElementById("sliderDots");
+
+    // build dots
+    slides.forEach((_, i) => {
+        const dot = document.createElement("span");
+        dot.classList.add("dot");
+        dot.addEventListener("click", () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+    });
+
+    dots = document.querySelectorAll(".dot");
+
+    updateSlider();
+
+    autoSlide = setInterval(() => moveSlide(1), 3000);
+});
+
+
+function moveSlide(direction) {
+
+    clearInterval(autoSlide);
+
+    const totalSlides = slides.length;
+
+    currentIndex += direction;
+
+    if (currentIndex >= totalSlides) currentIndex = 0;
+    if (currentIndex < 0) currentIndex = totalSlides - 1;
+
+    updateSlider();
+
+    autoSlide = setInterval(() => moveSlide(1), 5000);
+}
+
+
+function goToSlide(index){
+
+    clearInterval(autoSlide);
+
+    currentIndex = index;
+    updateSlider();
+
+    autoSlide = setInterval(() => moveSlide(1), 5000);
+}
+
+
+function updateSlider(){
+
+    const slider = document.getElementById('slider');
+
+    const offset = -currentIndex * 100;
+    slider.style.transform = `translateX(${offset}%)`;
+
+    slides.forEach(s => s.classList.remove("active"));
+    slides[currentIndex].classList.add("active");
+
+    dots.forEach(d => d.classList.remove("active"));
+    dots[currentIndex].classList.add("active");
+}

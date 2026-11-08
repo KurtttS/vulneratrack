@@ -29,7 +29,7 @@
 
         <div class="right">
             <h2>Hello User!</h2>
-            <p>Log in for your safety.</p>
+            <p>Please log in.</p>
             <form class="login-form" id="mainForm" action="router/loginregrouter.php" method="post">
                 <input type="email" name="logemail" placeholder="Email" required>
                 <div class="password-wrapper">
@@ -40,7 +40,7 @@
                 <button type="submit" name="login" class="btn login">Log In</button>
             </form>
             <p class="login-text">
-                New account?<a href="loginreg-module/signup.php">Sign up</a> Here.
+                New account?<a href="loginreg-module/signup.php"> Sign up</a> Here.
             </p>
         </div>
     </div>
@@ -54,7 +54,8 @@
       </div>
   </div>
 
-  
+  <footer class = "logfoot"> Copyright © 2026 Vulneratrack All Rights Reserved </footer>
     <script src="js/index.js"></script>
+    
 </body>
 </html>

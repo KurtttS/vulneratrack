@@ -96,5 +96,26 @@ class pointsystem extends database {
         return $stmt->execute([$name, $points, $householdID]);
     }
 
+    public function  fetchhouseholdcontacts($householdID){
+        $db = $this->getConnection();
+        $sql =  "SELECT u.First_Name, u.Last_Name, u.Contact_Number FROM user u JOIN member m ON u.UserID = m.User_ID WHERE m.Household_ID = ?";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$householdID]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchareacontacts($areaID) {
+        $db = $this->getConnection();
+        $sql = "SELECT u.First_Name, u.Last_Name, u.Contact_Number, h.HouseholdID,h.Area_ID FROM `user` u JOIN `member` m ON u.UserID = m.User_ID
+                JOIN `household` h ON m.Household_ID = h.HouseholdID
+                WHERE h.Area_ID = ? AND u.Contact_Number IS NOT NULL";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$areaID]);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>
