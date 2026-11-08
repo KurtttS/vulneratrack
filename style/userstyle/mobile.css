@@ -6,13 +6,7 @@
         overflow-x: hidden;
         width: 100%;
     }
-    body {
-        background: linear-gradient(white, #ffffff, #ffffff, #303870); 
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        margin: 0;
-    }
+
 
     .container {
         display: flex;
@@ -105,6 +99,13 @@
         font-size: 16px; 
         outline: none;
     }
+	
+
+.signup-form input[type="date"]{
+    max-width: 160px;
+    width: 160px !important;
+	min-height:1.2em;
+}
 
     .login-form .password-wrapper, 
     .signupstart-form .password-wrapper {
@@ -313,13 +314,33 @@
 /*home*/
 /*hello user*/
 .user {
+     background-image: linear-gradient(#303870, #303870);
         flex-direction: column;  
         align-items: center;      
         justify-content: center;  
         padding: 40px 20px;       
         min-height: 200px;        
-        text-align: center;       
+        text-align: center;    
+         position: relative;
+    overflow: visible;   
+    
     }
+
+.user::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -45px;  
+    
+    width: 140%;
+    height: 80px;
+
+    background: inherit;
+    border-radius: 90%;
+    z-index: 3;      
+    transform: translateX(-50%);
+}
+
 
     .user-left {
         max-width: 100%;          
@@ -343,8 +364,14 @@
     }
     
 /*concerns*/
+
+.concerns {
+    margin-top: -20px;
+}
+
 .concerns h2 { 
-    font-size: 40px; 
+    margin-top: 10px;
+  font-size: 35px !important;
     
 }
 .concerns > p { 
@@ -356,7 +383,8 @@
     align-items: center;    
     justify-content: center; 
     gap: 30px;
-    width: 100%;
+        width: auto;
+
     padding: 20px;          
     box-sizing: border-box;
 }
@@ -507,20 +535,25 @@
         align-items: center;
         flex-wrap: wrap; 
     }
+  .slider-container {
+            width: 40%;
+            font-size: 30px;
+        }
 
-.main-logo {
-    margin-top: 10px;   /* ← this puts it back down */
-    width: 450px;
-    height: auto;
-    display: block;
+        .user-card h2 {
+            font-size: 25px;
+        }
+
+         .user-card p {
+            font-size: 12px;
+        }
 }
 
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 1380px) {
 
         .slider-container {
-            width: 60%;
+            width: 50%;
+            font-size: 30px;
         }
 
         .vulne {

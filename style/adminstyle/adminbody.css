@@ -46,6 +46,18 @@
     box-shadow: 0 1px 5px rgb(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+     animation: moveUpFade 0.8s ease-out both;
+}
+
+@keyframes moveUpFade {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .stats-column {
@@ -81,17 +93,6 @@
     justify-content: center;
 }
 
-.pie-chart {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background: conic-gradient(
-        #3498db 0% 25%, 
-        #2980b9 25% 70%, 
-        #1a237e 70% 100%
-    );
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
 
 .chart-legend { 
     text-align: left; 
@@ -105,7 +106,6 @@
     display: flex;
     align-items: center;
 }
-
 .risk-column {
     display: flex;
     flex-direction: column;
@@ -134,9 +134,10 @@
     margin-right: 8px; 
 }
 
-.blue { background: #3498db; }
-.dark-blue { background: #2980b9; }
-.navy { background: #1a237e; }
+.light-blue { background-color: #ADD8E6; }
+.mid-blue   { background-color: #3D85F7; }
+.royal-blue { background-color: #0031CF; }
+.navy  { background-color: #000063; }
 .red { background: #e74c3c; }
 .yellow { background: #f1c40f; }
 .green { background: #2ecc71; }
@@ -149,8 +150,8 @@
     padding-bottom: 5px; 
 }
 
-.text-red { color: #c0392b; }
-.text-orange { color: #d35400; }
+.text-blue { color: #0031CF; }
+
 .text-danger { 
     color: #e74c3c; 
     font-size: 40px; 
@@ -163,13 +164,65 @@
     border: 1px solid #dcdde1;
     border-radius: 15px;
     padding: 20px;
-    margin-top: 20px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    animation: moveUpFade 1.5s ease-out both;
 }
 
-.map-label { 
+
+@keyframes moveUpFade {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+.GeneratePDF {
+    background-color: #475fb0; 
+    color: white; 
+    padding: 20px 25px; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 1rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+    border-radius: 25px; 
+    width: 300px;
+     animation: moveUpFade 1.5s ease-out both;
+}
+
+@keyframes moveUpFade {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.GeneratePDF:hover {
+     background-color: #013c7a; 
+    }
+
+.overview-map-label { 
     font-weight: bold; 
     margin-bottom: 10px; 
+}
+
+
+@media (max-width: 768px) {
+
+    .GeneratePDF {
+margin-bottom: 20px;
+    }
+    
 }
 
 .map-wrapper { 
@@ -186,3 +239,5 @@
     height: 100%;
     z-index: 1;
 }
+
+

@@ -32,11 +32,17 @@
     <i class="fa-solid fa-arrow-left"></i>
 </a>
           <h2>Create an account</h2>
-          <p>Fill up the fields.</p>
+          <p>Please fill up all fields.</p>
           <form class="signup-form" action="../router/loginregrouter.php" method="post">
             <input type="text" name="firstname" placeholder="First Name" required>
             <input type="text" name="lastname" placeholder="Last Name" required>
-            <input type="date" name="dateofbirth" required>
+            <input  type="text"
+			name="dateofbirth"
+			placeholder="Date of birth"
+			onfocus="this.type='date'"
+			onblur="if(!this.value)this.type='text'"
+			required>
+            
             <select name="status" required>
                 <option value="" disabled selected>Status</option>
                 <option>Adult</option>
@@ -44,6 +50,7 @@
                 <option>PWD</option>
                 <option>Senior Citizen</option>
             </select>
+            <input type="text" name="contactnum"  placeholder="Contact Information" class="num" required>
             <div class="file-container area">
               <label for="birth-cert" class="file-label"  id="birthCertLabel"> Upload Birth Certificate <span>+</span></label>
               <input type="file" name="birthcert" id="birth-cert" required>
@@ -52,7 +59,7 @@
                 <option value="" disabled selected>Which area do you belong?</option>
                 <option value="Celine Homes">Celine Homes</option>
                 <option value="East Homes">East Homes</option>
-                <option value="Mandalagan, Bacolod City">Mandalagan</option>
+                <option value="Purok Carvic">Purok Carvic</option>
             </select>
             <div class="address-wrapper area">
                 <input type="text" name="address" id="addressInput" placeholder="Full Address" autocomplete="off" required>
@@ -75,7 +82,7 @@
             <button type="button" onclick="closeModal()" class="btn login" style="width:100%">Understood</button>
         </div>
     </div>
-
+  <footer class = "logfoot"> Copyright © 2026 Vulneratrack All Rights Reserved </footer>
     <script src="../js/signup.js"></script>
  
 </body>

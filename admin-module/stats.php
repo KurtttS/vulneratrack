@@ -1,3 +1,6 @@
+<?php 
+include '../processes/statsctrl.php'; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,23 +14,17 @@
     <link rel="stylesheet" href="../style/adminstyle/sidebar.css">
     <link rel="stylesheet" href="../style/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
-</head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="adminhome">
     <div class="page-container">
         <?php 
         $path_to_root = "../";
-        include '../nav/sidebar.php'; ?>
+        include '../nav/sidebar.php'; 
+        ?>
 
         <div class="adminpage-container">
-          
             <div class="main-content">
                 <div class="header-section">
                     <div class="overview-btn">Statistics</div>
@@ -35,96 +32,82 @@
                 </div>
 
                 <div class="dashboard-grid">
-                    <div class="top-stats-row">
-                        <div class="card stat-card">
+                    <div class="stats-sidebar-col">
+                        <div class="card mini-stat">
                             <p>Total Population</p>
-                            <h2>2321</h2>
+                            <h2><?php echo $totalPop; ?></h2>
                         </div>
-                        <div class="card stat-card">
+                        <div class="card mini-stat center-text">
+                            <p>Total High Risk Households</p>
+                            <h2 class="text-red" id="grand-total-risk"></h2>
+                        </div> 
+                        
+                       
+                        
+                        <div class="card risk-card">
+                            <h3>High Risk Households per Area</h3>
+                            
+                            <div id="risk-stats-container" 
+                                class="risk-stats-row" 
+                                data-raw-risk='<?php echo json_encode($statsObj->getRawHouseholdRiskData()); ?>'>
+                                <p>Calculating risk assessments...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="main-charts-col">
+                        <div class="card chart-card">
+                            <h3>Population per Area</h3>
+                            <div class="chart-container">
+                                <canvas id="areaBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card chart-card" style="margin-top:20px;">
+                            <h3>Total Population Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="vulnPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reports-col">
+                        <div class="card chart-card">
+                            <h3>Vulnerable Population Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="popBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card mini-stat">    
                             <p>Total Vulnerable Population</p>
-                            <h2>785</h2>
+                            <h2><?php echo $vulnPop; ?></h2>
                         </div>
-                        <div class="card stat-card">
-                            <p>Areas Monitored</p>
-                            <h2>3</h2>
-                        </div>
-                        <div class="card stat-card">
-                            <p>Reports real time</p>
-                            <h2>7</h2>
-                        </div>
-                    </div>
-
-                    <div class="middle-section">
-                        <div class="distribution-col">
-                            <div class="card chart-card">
-                                <h3>Vulnerable Population Distribution</h3>
-                                <div class="chart-container-flex">
-                                    <div class="pie-placeholder vulnerable-pie"></div>
-                                    <div class="chart-legend">
-                                        <div class="legend-item"><i class="dot light-blue"></i> Pregnant Women</div>
-                                        <div class="legend-item"><i class="dot blue"></i> Senior Citizens</div>
-                                        <div class="legend-item"><i class="dot dark-blue"></i> PWD</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card chart-card">
-                                <h3>Total Population Distribution</h3>
-                                <div class="chart-container-flex">
-                                    <div class="pie-placeholder total-pie"></div>
-                                    <div class="chart-legend">
-                                        <div class="legend-item"><i class="dot green"></i> Able-bodied Populace</div>
-                                        <div class="legend-item"><i class="dot yellow"></i> Vulnerable Populace</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="risk-col">
-                            <div class="card map-report-card">
-                                <h3>Recent Emergency Report</h3>
-                                <div class="map-box">
-                                    <div id="statmap"></div>
-                                    <div class="map-label-overlay">Celine Homes</div>
-                                    <p class="map-subtext">Blocked Road - Blk 3 lot 9</p>
-                                </div>
-                            </div>
-
-                            <div class="card risk-count-card">
-                                <h3>High Risk Households Count</h3>
-                                <div class="risk-stats-container">
-                                    <div class="risk-data">
-                                        <span class="count-num">7</span>
-                                        <span class="count-label">Celine Homes</span>
-                                    </div>
-                                    <div class="risk-data">
-                                        <span class="count-num">5</span>
-                                        <span class="count-label">East Homes</span>
-                                    </div>
-                                    <div class="risk-data">
-                                        <span class="count-num">2</span>
-                                        <span class="count-label">Mandalagan</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="card mini-stat center-text">
+                            <p>Total Resolved Reports</p>
+                            <h2><?php echo $resovled; ?></h2>
+                        </div> 
+                        <div class="card mini-stat">
+                            <p>Total Ongoing Reports</p>
+                            <h2><?php echo $realTime; ?></h2>
                         </div>
                     </div>
-
-                    <div class="history-section">
-                        <div class="card history-card">
-                            <h3>Population of Able-bodied Populace</h3>
-                            <div class="bar-chart-placeholder able-bars"></div>
-                        </div>
-                        <div class="card history-card">
-                            <h3>Population of Vulnerable Populace</h3>
-                            <div class="bar-chart-placeholder vulnerable-bars"></div>
-                        </div>
-                    </div>
-                </div> </div>
-
-            <?php include '../nav/footer.php'; ?>
+                </div>
+                 <?php include '../nav/footer.php'; ?>
+            </div>
         </div>
+         
     </div>
-    <script src="../js/stats.js"></script>
+    <script>
+        window.chartData = {
+            vulnDist: <?php echo json_encode($vulnDist ?? []); ?>,
+            popBreakdown: <?php echo json_encode($popBreakdown ?? []); ?>, 
+            areaPop: <?php echo json_encode($areaPop ?? []); ?>, 
+            totalPop: <?php echo (int)($totalPop ?? 0); ?>,
+            vulnPop: <?php echo (int)($vulnPop ?? 0); ?>
+        };
+    </script>
+            
+    <script src="../js/chart.js"></script>
 </body>
-</html>
+</html> 

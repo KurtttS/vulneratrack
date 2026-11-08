@@ -8,6 +8,7 @@ if (isset($_POST['submit_report'])) {
     $files = $_FILES['report_files'];
     $householdID = $_SESSION['householdid'];
      $report_address = $_SESSION['address'] ?? null;
+      $located = $_POST['address'] ?? null;
 
 
     include __DIR__ . "/../db/database.php";
@@ -19,7 +20,8 @@ if (isset($_POST['submit_report'])) {
         $description,
         $files,
         $householdID,
-        $report_address
+        $report_address,
+        $located
     );
 
     $report->submitReport();

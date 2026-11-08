@@ -50,6 +50,21 @@
     min-width: 300px;
 }
 
+.input-group input {
+    width: 100%;
+    padding: 15px 36px 15px 20px; 
+    background-color: #d9dbe9; 
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #444;
+    outline: none;
+    margin-bottom: 25px;
+    font-family: 'Poppins', sans-serif;
+ 
+
+}
+
 .input-group select {
     width: 100%;
     padding: 15px 36px 15px 20px; 
@@ -115,7 +130,16 @@
     font-weight: bold;
     color: #444;
     transition: background 0.3s;
+    cursor: pointer;
 }
+
+.file-upload p {
+    margin-left: 5px;
+    margin-top: 10px;
+    font-size: 10px;
+     color: #444;
+}
+
 
 .file-upload label:hover {
     background-color: #c5c7d9;
@@ -168,145 +192,3 @@
 
 
 
-/*emergency*/
-.emergency-main-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 20px;
-    background: #fdfdfd; 
-    min-height: 71vh;  
-}
-
-
-.hotline-board {
-    background: #4a59b0; 
-    padding: 50px;
-    border-radius: 40px;
-    width: 100%;
-    max-width: 1100px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    animation: slideUpFade 0.8s ease-out forwards;
-}
-
-@keyframes slideUpFade {
-    from {
-        opacity: 0;
-        transform: translateY(30px); 
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0); 
-    }
-}
-
-
-.main-title {
-    color: #ff4d4d; 
-    font-size: 36px;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 25px;
-    letter-spacing: 1px;
-}
-
-/* 911 Section */
-.national-hotline {
-    background: white;
-    padding: 15px 60px;
-    border-radius: 50px;
-    display: inline-block;
-    border: 3px solid #e57373;
-    margin-bottom: 50px;
-}
-
-.national-hotline span {
-    color: #e57373;
-    font-weight: bold;
-    font-size: 14px;
-    display: block;
-}
-
-.national-hotline h2 {
-    color: #e57373;
-    font-size: 55px;
-    margin: 0;
-    line-height: 1;
-}
-
-/* Contact Cards Layout */
-.cards-container {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap; 
-}
-
-.contact-card {
-    background: white;
-    border-radius: 35px;
-    padding: 35px 20px;
-    flex: 1;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.contact-card h3 {
-    color: #303870;
-    font-size: 22px;
-    margin-bottom: 5px;
-}
-
-.click-text {
-    color: #e57373;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-
-.phone-strip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: #e9ecef; 
-    padding: 12px 25px;
-    border-radius: 50px;
-    text-decoration: none;
-    color: #303870;
-    font-weight: bold;
-    font-size: 24px;
-    width: 90%;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.phone-strip img {
-    height: 30px; 
-    width: auto;
-}
-
-
-.phone-strip:hover {
-    background: #303870;
-    color: #ffffff;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.address-info {
-    font-size: 12px;
-    color: #333;
-    margin-top: 15px;
-    line-height: 1.4;
-}
-
-.address-info strong {
-    display: block;
-    color: #303870;
-    margin-bottom: 4px;
-}

@@ -17,45 +17,68 @@ class CensusCtrl {
         switch ($action) {
             case 'add':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->censusModel->createMember($_POST);
-                    header("Location: census.php?page=$page");
+                    if ($this->censusModel->createMember($_POST)) {
+                        header("Location: census.php?page=$page&status=success");
+                    } else {
+                        header("Location: census.php?page=$page&status=error");
+                    }
                     exit();
                 }
                 break;
 
             case 'update':
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $this->censusModel->updateMember($_POST['UserID'], $_POST);
-                    header("Location: census.php?page=$page");
+                    $userId = (int)$_POST['UserID'];
+                    if ($this->censusModel->updateMember($userId, $_POST)) {
+                        header("Location: census.php?page=$page&status=updated");
+                    } else {
+                        header("Location: census.php?page=$page&status=error");
+                    }
                     exit();
                 }
                 break;
 
             case 'delete':
-                $id = $_GET['id'] ?? null;
+                $id = isset($_GET['id']) ? (int)$_GET['id'] : null; 
                 if ($id) {
-                    $this->censusModel->deleteMember($id);
+                    if ($this->censusModel->deleteMember($id)) {
+                        header("Location: census.php?page=$page&status=deleted");
+                    } else {
+                        header("Location: census.php?page=$page&status=delete_failed");
+                    }
                 }
-                header("Location: census.php?page=$page");
                 exit();
                 break;
 
             case 'bulk_delete':
                 $ids = explode(',', $_GET['ids'] ?? '');
+                $successCount = 0;
                 foreach ($ids as $id) {
                     if (!empty($id)) {
-                        $this->censusModel->deleteMember((int)$id);
+                        if ($this->censusModel->deleteMember((int)$id)) {
+                            $successCount++;
+                        }
                     }
                 }
-                header("Location: census.php?page=$page");
+                header("Location: census.php?page=$page&bulk_deleted=$successCount");
                 exit();
                 break;
 
             default:
-                $members = $this->censusModel->getAllMembers($offset, $limit);
-                $total_records = $this->censusModel->getTotalCount();
+                $searchTerm = $_GET['search'] ?? '';
+                $status = in_array($_GET['status'] ?? '', ['success', 'updated', 'deleted', 'error', 'delete_failed']) ? '' : ($_GET['status'] ?? '');
+
+                $total_records = $this->censusModel->getTotalCount($searchTerm, $status);
                 $total_pages = ceil($total_records / $limit);
-                return ['members' => $members, 'total_pages' => $total_pages, 'page' => $page];
+                
+                $page = ($page > $total_pages && $total_pages > 0) ? $total_pages : $page;
+                $offset = ($page - 1) * $limit;
+
+                return [
+                    'members' => $this->censusModel->getAllMembers($offset, $limit, $searchTerm, $status),
+                    'total_pages' => $total_pages,
+                    'page' => $page
+                ];
         }
     }
 }

@@ -1,8 +1,15 @@
-//Map base settings
+//Base map with user location
+const mapElement = document.getElementById('map');
+const storedLat = mapElement.getAttribute('data-lat');
+const storedLng = mapElement.getAttribute('data-lng');
+const areaname = mapElement.getAttribute('area-name');
+const latNum = parseFloat(storedLat);
+const lngNum = parseFloat(storedLng);
+
 var map = L.map('map', {
     zoomControl: false,
     scrollWheelZoom: false
-}).setView([10.672768169260864, 122.98753057212929], 18);
+}).setView([lngNum, latNum], 15);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -13,54 +20,56 @@ L.control.zoom({
     position: 'bottomright' 
 }).addTo(map);
 
+const userMarker = L.marker([lngNum, latNum]).addTo(map);
+userMarker.bindPopup("You are located here!").openPopup();
 
 //Areas Monitored menu
 const monitoredAreas =[
     { name: "Celine Homes", coords: [10.6727, 122.9875], zoom: 17 },
-    { name: "East Homes Phase 3", coords: [10.67469166716797, 122.99009451560596], zoom: 17},
-    { name: "Buena Royale", coords:[10.658594502768942, 122.99730998650621], zoom: 17}
+    { name: "East Homes", coords: [10.67469166716797, 122.99009451560596], zoom: 17},
+    { name: "Purok Carvic", coords:[10.690732242556788, 122.9602300962636], zoom: 19}
 ];
 
 var areaControl = L.control({ position: 'topright' });
-areaControl.onAdd= function(map){
+areaControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'map-menu-container');
-    
-    div.innerHTML = '<h4 style="margin:0 0 10px 0; font-size: 14px;">Areas Secured</h4>';
+    div.innerHTML = '<h4 style="margin:0 0 10px 0;">Areas Secured</h4>';
 
     monitoredAreas.forEach(area => {
         let button = document.createElement('button');
         button.innerText = area.name;
-        button.className = 'menu-btn';
-
-        button.onclick = function() {
-            map.flyTo(area.coords, area.zoom, {
-                animate: true,
-                duration: 0.5 
-            });
-        };
+        
+        if (area.name === areaname) {
+            button.className = 'menu-btn highlighted-btn';
+        } else {
+            button.className = 'menu-btn';
+        }
 
         div.appendChild(button);
     });
 
-    // Stop map clicks from "bleeding through" the buttons
     L.DomEvent.disableClickPropagation(div);
-    
     return div;
 };
 areaControl.addTo(map);
 
-//PLACEHOLDER FOR USER LOCATION
-var marker = L.marker([10.6727, 122.9875]).addTo(map);
-marker.bindPopup("<b>You are here</b>").openPopup();
-
 //Routing Function
 let onRoute = false;
 let routeControl = null;
-
+let emerlat = 0;
+let emerlng = 0;
+if (areaname == "Purok Carvic"){
+    emerlng = 10.690976872339029;
+    emerlat = 122.95843435535801;
+}
+else {
+    emerlng = 10.670823793690534;
+    emerlat = 122.98678411341392;
+}
 var nearestShelter = L.control({ position: 'topleft' });
 nearestShelter.onAdd=function(map){
     var div = L.DomUtil.create('div', 'map-route-container');
-    div.innerHTML = '<h4 style="margin:0 0 10px 0; font-size: 14px;">Emergency Shelter</h4>';
+    div.innerHTML = '<h4 style="margin:0 0 10px 0;">Emergency Shelter</h4>';
 
     let btn = document.createElement('button');
     btn.innerText = 'Route';
@@ -70,9 +79,12 @@ nearestShelter.onAdd=function(map){
         if (onRoute === false){
             routeControl = L.Routing.control({
                 waypoints: [
-                    L.latLng(10.6727, 122.9875),
-                    L.latLng(10.670823793690534, 122.98678411341392)
-                ],show:false
+                    L.latLng(lngNum, latNum),
+                    L.latLng(emerlng, emerlat)
+                ],show: false,            
+            addWaypoints: false,     
+            draggableWaypoints: false, 
+            fitSelectedRoutes: true
                 }).addTo(map);
                 onRoute = true;
                 btn.innerText  = 'Clear Route'
@@ -90,5 +102,4 @@ nearestShelter.onAdd=function(map){
     L.DomEvent.disableClickPropagation(div);
     return div;
     }
-
 nearestShelter.addTo(map);

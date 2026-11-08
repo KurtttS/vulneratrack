@@ -37,13 +37,27 @@ $page = $data['page'];
             </div>
 
             <div class="controls">
-               
-                
-                <button id="deleteSelectedBtn" class="action-btn delete">
-                    <i class="fas fa-trash"></i> Delete Selected
+                <form method="GET" class="filter-search-bar">
+                <button id="deleteSelectedBtn" class="action-btn delete" type="button">
+                    <i class="fas fa-trash"></i>
                 </button>
-                
+
+                    <input type="text" name="search" placeholder="Search Name, Address, Email, Phone Number" 
+                        value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+
+                    <select name="status">
+                        <option value="">All Status</option>
+                        <option>Adult</option>
+                        <option>Child</option>
+                        <option>PWD</option>
+                        <option>Senior Citizen</option>
+                    </select>
+
+                    <button type="submit">Search</button>
+                </form>
+
                 <button class="add-btn" onclick="toggleModal()">+</button>
+
             </div>
 
             <div class="table-container">
@@ -51,10 +65,10 @@ $page = $data['page'];
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
-                            <th>User ID</th>    
                             <th>Name</th>
                             <th>Address</th>
                             <th>Email</th>
+                            <th>Contact Number</th>
                             <th>Date of Birth</th>
                             <th>Status</th>
                             <th>Household ID</th>
@@ -66,10 +80,10 @@ $page = $data['page'];
                             <?php foreach($membersList as $row): ?>
                                 <tr>
                                     <td><input type="checkbox" class="row-checkbox" value="<?= $row['UserID']; ?>"></td>
-                                    <td><?= $row['UserID']; ?></td>
                                     <td><?= htmlspecialchars($row['First_Name'] . ' ' . $row['Last_Name']); ?></td>
                                     <td><?= htmlspecialchars($row['Address']); ?></td>
                                     <td><?= htmlspecialchars($row['Email']); ?></td>
+                                    <td><?= htmlspecialchars($row['Contact_Number']); ?></td>
                                     <td><?= $row['Date_of_Birth']; ?></td>
                                     <td>
                                         <span class="status-pill <?= strtolower(str_replace(' ', '-', $row['User_Status'])); ?>">
@@ -79,7 +93,7 @@ $page = $data['page'];
                                     <td><?= $row['Household_ID'] ?? 'None'; ?></td>
                                     <td class="action-cell">
                                         <div class="action-wrapper">
-                                            <button class="action-icon edit-icon edit-btn" title="Edit Member">
+                                            <button class="action-icon edit-icon edit-btn" title="Edit Member" data-id="<?= $row['UserID']; ?>">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </div>
@@ -113,19 +127,25 @@ $page = $data['page'];
         </div> 
     </div> 
 
-    <div id="censusModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center;">
+    <div id="censusModal" class="modal-overlay">
         <div class="modal-content">
             <h2 id="modalTitle" style="color: #2d3e75; margin-bottom: 20px;">Census Member</h2>
-            <form id="censusForm" method="POST" action="census.php?action=add" autocomplete="off">
+            
+            <form id="censusForm" method="POST" action="census.php?action=add" autocomplete="off" enctype="multipart/form-data">
                 <input type="hidden" id="editUserId" name="UserID">
                 
                 <div class="form-row">
                     <div class="form-group flex-1">
                         <input type="text" id="firstName" name="first_name" placeholder="First Name" required>
                     </div>
+
                     <div class="form-group flex-1">
                         <input type="text" id="lastName" name="last_name" placeholder="Last Name" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" id="contactnum" name="contact_num" placeholder="Contact Number" required>
                 </div>
 
                 <div class="form-group">
@@ -137,7 +157,12 @@ $page = $data['page'];
                 </div>
 
                 <div class="form-group">
-                    <input type="file" name="birthcert" id="birth-cert" required>
+                    <div class="file-container area">
+                        <label for="birth-cert" class="file-label" id="birthCertLabel">
+                            Upload Birth Certificate <span>+</span>
+                        </label>
+                        <input type="file" name="birthcert" id="birth-cert" required style="display: none;">
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -158,7 +183,7 @@ $page = $data['page'];
                 <div class="form-group">
                     <select name="houseChoice" id="householdAction" onchange="toggleHouseholdUI()" required>
                         <option value="join">Join Existing Household</option>
-                        <option  value="create">Create New Household</option>
+                        <option value="create">Create New Household</option>
                     </select>
                 </div>
 
@@ -174,7 +199,7 @@ $page = $data['page'];
                             <option value="" disabled selected>Area</option>
                             <option value="Celine Homes">Celine Homes</option>
                             <option value="East Homes">East Homes</option>
-                            <option value="Mandalagan, Bacolod City">Mandalagan</option>
+                            <option value="Purok Carvic">Purok Carvic</option>
                         </select>
                     </div>
                     <div id="map" style="height: 180px; width: 100%; margin-bottom: 10px; border-radius: 12px; border: 1.5px solid #333;"></div>
@@ -187,6 +212,19 @@ $page = $data['page'];
                     <button type="button" class="cancel-btn" onclick="toggleModal()">Cancel</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content delete-modal-card">
+    
+            <h2 class="deleteh2">Confirm Deletion</h2>
+            <p class="p">Are you sure you want to delete the selected member(s)? This action is permanent and cannot be undone.</p>
+            
+            <div class="delete-modal-actions">
+                <button type="button" class="btn-secondary" onclick="toggleDeleteModal()">No, Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn-danger">Yes, Delete</button>
+            </div>
         </div>
     </div>
 

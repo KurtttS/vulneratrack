@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchAssessment(currentArea);
         }
         if (currentArea==1){
-            areamap.setView([10.672768169260864, 122.98753057212929], 12);
+            areamap.setView([10.672768169260864, 122.98753057212929], 15);
         }
         else if (currentArea==2){
-            areamap.setView([10.675115474735781, 122.98933560563219], 12);
+            areamap.setView([10.675115474735781, 122.98933560563219], 15);
         }
         else if (currentArea==3){
-            areamap.setView([10.68964402743661, 122.95881539210416], 12);
+            areamap.setView([10.690732242556788, 122.9602300962636], 15);
         }
     });
 });
@@ -55,7 +55,7 @@ function updateUI(data) {
     data.risks.forEach(risk => {
         list.innerHTML += `
             <li class="risk-item">
-                <button class="vul-delete-btn" onclick="deleteVulnerability(${risk.VulnerabilityID})"></button>
+                <button class="vul-delete-btn" onclick="deleteVulnerability(${risk.VulnerabilityID})">X</button>
                 ${risk.Type_of_Vulnerablity}
                 <span>+ ${risk.Vulnerability_Points}</span>
             </li>
@@ -88,6 +88,11 @@ function updateUI(data) {
             btn.onclick = function() {
                 console.log("Tag clicked:", tag.name);
                 addAreaVulnerability(tag.name, tag.points);
+                if (tag.name ==  "Storm Surge" || tag.name == "Red Rainfall" || tag.name  == "Typhoon Signal 3" 
+                    || tag.name == "Typhoon Signal 4" || tag.name == "Typhoon Signal 5") {
+                    vulnerabilityname =  tag.name;
+                    sendAreaAlert(currentArea, vulnerabilityname);
+                }
             };
             
             tagGrid.appendChild(btn);
@@ -96,18 +101,17 @@ function updateUI(data) {
 }
 
 const AVAILABLE_TAGS = [
-    { name: "Power Outage", points: 3 },
     { name: "Drainage failure", points: 2 },
-    { name: "Within Floodzone", points: 2 },
-    { name: "Storm Surge", points: 5 },
+    { name: "Within Floodzone", points: 6 },
+    { name: "Storm Surge", points: 10 },
     { name: "Yellow Rainfall", points: 2 },
-    { name: "Orange Rainfall", points: 3 },
-    { name: "Red Rainfall", points: 4 },
-    { name: "Typhoon Signal 1", points: 1 },
-    { name: "Typhoon Signal 2", points: 2 },
-    { name: "Typhoon Signal 3", points: 3 },
-    { name: "Typhoon Signal 4", points: 5 },
-    { name: "Typhoon Signal 5", points: 7 }
+    { name: "Orange Rainfall", points: 5 },
+    { name: "Red Rainfall", points: 10 },
+    { name: "Typhoon Signal 1", points: 2 },
+    { name: "Typhoon Signal 2", points: 4 },
+    { name: "Typhoon Signal 3", points: 10 },
+    { name: "Typhoon Signal 4", points: 20 },
+    { name: "Typhoon Signal 5", points: 20 }
 ];
 
 //Add area vulnerabilities
@@ -149,44 +153,118 @@ function deleteVulnerability(VulnerabilityID) {
         .catch(err => console.error("Error deleting:", err));
 }
 
-//Household Assessment
+function sendAreaAlert(currentArea, vulnerabilityname) {
+    console.log(`Triggering SMS Alerts for Area Residents`);
+    
+    fetch(`../router/pointsystemrouter.php?action=notifyAreaRisk&areaID=${currentArea}&alertname=${vulnerabilityname}`)
+        .then(response => response.json())
+        .then(result => {
+            console.log("Full PhilSMS Response:", result.details); 
+            if (result.status === 'success') {
+                profmodup("Emergency SMS alerts sent to residents!", "success");
+            }
+        })
+        .catch(err => console.error("SMS Trigger Error:", err));
+}
 
-    //Search
-    function searchByHousehold() {
-    const householdID = document.getElementById('householdSearch').value;
+let currentHouse = 0;
 
+
+   //Household Search
+
+
+function searchByHousehold() {
+    const householdID = document.getElementById('householdSearch').value.trim();
     if (!householdID) {
-        alert("Please enter a Household ID");
+        profmodup("Please enter a Household ID", "error");
         return;
     }
-    fetch(`../router/pointsystemrouter.php?action=getHouseholdAssessment&householdID=${householdID}`)
+    fetch(`../router/pointsystemrouter.php?action=getHouseholdAssessment&householdID=${encodeURIComponent(householdID)}`)
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert(data.error);
-            } else {
-                currentHouse = data.household.HouseholdID;
-                updateHouseholdUI(data);
+                profmodup(data.error, "error");
+                return;
             }
-        })
-        .catch(err => console.error("Search Error:", err));
-}
-
-currentHouse = 0;
-
-//Fetch
-function fetchHouseholdAssessment(householdID) {
-    fetch(`../router/pointsystemrouter.php?action=getHouseholdAssessment&householdID=${householdID}`)
-        .then(response => response.json())
-        .then(data => {
-            if(data.error) {
-                console.error("Household not found");
+            if (!data.household || !data.household.HouseholdID) {
+                profmodup("Invalid household data received", "error");
                 return;
             }
             currentHouse = data.household.HouseholdID;
-            updateHouseholdUI(data);
+            if (typeof updateHouseholdUI === "function") {
+                updateHouseholdUI(data);
+            }
+            profmodup("Household loaded successfully");
+        })
+        .catch(err => {
+            console.error("Search Error:", err);
+            profmodup("Server error while searching household", "error");
         });
 }
+
+
+
+   //Optional fetch by ID
+
+
+function fetchHouseholdAssessment(householdID) {
+
+    if (!householdID) return;
+
+    fetch(`../router/pointsystemrouter.php?action=getHouseholdAssessment&householdID=${encodeURIComponent(householdID)}`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.error) {
+                profmodup("Household not found", "error");
+                return;
+            }
+
+            if (!data.household || !data.household.HouseholdID) {
+                profmodup("Invalid household data received", "error");
+                return;
+            }
+
+            currentHouse = data.household.HouseholdID;
+
+            if (typeof updateHouseholdUI === "function") {
+                updateHouseholdUI(data);
+            }
+
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err);
+            profmodup("Server error while loading household", "error");
+        });
+}
+
+
+
+   //Color box alert
+
+
+function profmodup(message, type = "success") {
+
+    const box  = document.getElementById("customAlert");
+    const text = document.getElementById("customAlertText");
+
+    if (!box || !text) return;
+
+    text.textContent = message;
+
+    box.classList.remove("success", "error", "show");
+
+    box.classList.add(type);
+    box.classList.add("show");
+
+    setTimeout(() => {
+        box.classList.remove("show");
+    }, 2200);
+}
+
+
+
+
 
 //UpdateUI
     function updateHouseholdUI(data) {
@@ -211,7 +289,7 @@ function fetchHouseholdAssessment(householdID) {
         if (tally.pwd_count>0){
             container.innerHTML += `
             <li class="household-item">
-                <button class="vul-delete-btn"></button>
+                <button class="vul-delete-btn">X</button>
                     ${tally.pwd_count} PWDs
                     <span>+ ${pwdPoints}</span>
                 </li>`;
@@ -219,7 +297,7 @@ function fetchHouseholdAssessment(householdID) {
         if (tally.elderly_count>0){
             container.innerHTML += `
             <li class="household-item">
-                <button class="vul-delete-btn"></button>
+                <button class="vul-delete-btn">X</button>
                     ${tally.elderly_count} Elderly
                     <span>+ ${elderlyPoints}</span>
                 </li>`;
@@ -227,7 +305,7 @@ function fetchHouseholdAssessment(householdID) {
         if (tally.child_count>0){
             container.innerHTML += `
             <li class="household-item">
-                <button class="vul-delete-btn"></button>
+                <button class="vul-delete-btn">X</button>
                     ${tally.child_count} Children
                     <span>+ ${childPoints}</span>
                 </li>`;
@@ -236,7 +314,7 @@ function fetchHouseholdAssessment(householdID) {
             data.house_risks.forEach(house_risks => {
             container.innerHTML += `
                 <li class="household-item house-risk">
-                    <button class="vul-delete-btn" onclick="deleteVulnerability(${house_risks.VulnerabilityID})"></button>
+                    <button class="vul-delete-btn" onclick="deleteVulnerability(${house_risks.VulnerabilityID})">X</button>
                     ${house_risks.Type_of_Vulnerablity}
                     <span>+ ${house_risks.Vulnerability_Points}</span>
                 </li>`;
@@ -245,7 +323,7 @@ function fetchHouseholdAssessment(householdID) {
             data.area_risks.forEach(area_risks => {
             container.innerHTML += `
                 <li class="household-item">
-                    <button class="vul-delete-btn" onclick="deleteVulnerability(${area_risks.VulnerabilityID})"></button>
+                    <button class="vul-delete-btn" onclick="deleteVulnerability(${area_risks.VulnerabilityID})">X</button>
                     ${area_risks.Type_of_Vulnerablity}
                     <span>+ ${area_risks.Vulnerability_Points}</span>
                 </li>
@@ -257,9 +335,13 @@ function fetchHouseholdAssessment(householdID) {
         data.house_risks.forEach(r => housePoints += parseInt(r.Vulnerability_Points) || 0);
         totalHousePoints = pwdPoints + elderlyPoints + childPoints + areaPoints + housePoints;
         scoreHouseDisplay.innerText = totalHousePoints;
+        let previousGrade = scoreHouseGrade.innerText;
 
         if (totalHousePoints >= 20){
             scoreHouseGrade.innerText = 'High Risk';
+            if (previousGrade !== 'High Risk' && currentHouse !== 0) {
+            sendHighRiskAlert(currentHouse, totalHousePoints);
+            }
         }
         if (totalHousePoints < 20 && totalHousePoints > 10){
             scoreHouseGrade.innerText = 'Medium Risk';
@@ -289,14 +371,28 @@ function fetchHouseholdAssessment(householdID) {
 
     //List of avail tags for household
     const HOUSEAVAILABLE_TAGS = [
-    { name: "Power Outage", points: 3 },
-    { name: "Blocked Road", points: 2 },
+    { name: "Road potholes", points: 3 },
     { name: "Clogged Canals", points: 2 },
     { name: "Standing Water", points: 2 },
     { name: "Structural Damage", points: 3 },
+	{ name: "Other", points: 3 },
     { name: "Severe Structural Damage", points: 5 },
     { name: "Single entry/exit", points: 4 }
 ];
+
+function sendHighRiskAlert(householdID) {
+    console.log(`Triggering SMS Alerts for Household ${householdID}`);
+    
+    fetch(`../router/pointsystemrouter.php?action=notifyHighRisk&householdID=${householdID}`)
+        .then(response => response.json())
+        .then(result => {
+            console.log("Full PhilSMS Response:", result.details); 
+            if (result.status === 'success') {
+                profmodup("Emergency SMS alerts sent to residents!", "success");
+            }
+        })
+        .catch(err => console.error("SMS Trigger Error:", err));
+}
 
 //add house vulnerabilities
 function addHouseholdVulnerability(name, points) {
@@ -317,7 +413,6 @@ function addHouseholdVulnerability(name, points) {
         .catch(err => console.error("Fetch Error:", err));
 }
 
-
 //Map displays
 
 //Area map
@@ -333,7 +428,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var celinemarker = L.marker([10.672768169260864, 122.98753057212929]).addTo(areamap);
 var easthomesmarker = L.marker([10.675115474735781, 122.98933560563219]).addTo(areamap);
-var mandalaganmarker = L.marker([10.68964402743661, 122.95881539210416]).addTo(areamap);
+var purokcarvic = L.marker([10.690732242556788, 122.9602300962636]).addTo(areamap);
 
 //Household map
 var housemap = L.map('housemap', {

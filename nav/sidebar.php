@@ -1,6 +1,21 @@
-
 <link rel="stylesheet" href="../style/adminmobile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<?php
+ob_start();
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION["userid"])) {
+    header("Location: ../index.php");
+    exit();
+}
+?>
 
 <div class="sidebar">
     <div class="sidebar-header">
@@ -21,8 +36,10 @@
     </nav>
 
 <div class="user-section">
+
+<!--
     <div class="nav-item notifications">
-        <!-- javascript:void(0) = wala may matabo if click -->
+       
         <a href="javascript:void(0)" id="bellIcon">
     <i class="fa-solid fa-bell"></i>
     <span>Notifications</span>
@@ -31,18 +48,15 @@
     <div class="notification-dropdown" id="notificationDropdown">
         <div class="notifdropdown-header">
             <h1>Notifications</h1>
-            <h2>be alert!</h2>
+            <h2>COMING SOON</h2>
         </div>
         <hr>
         <div class="notification-list">
-            <a href="#"><i class="fa-solid fa-circle-info"></i> <p> a report has been submitted.</p></a>
+            <a href="#"><i class="fa-solid fa-circle-info"></i> <p> COMING SOON</p></a>
         </div>
     </div>
-    </div>
+    </div> -->
 
-
-
-    
     <div class="admin-profile-container">
         <div class="admin-profile" id="adminProfileTrigger">
             <div class="admin-info">
@@ -68,3 +82,4 @@
 </div>
 
 <script src="../js/sidebar.js"></script>
+<script src="../js/security.js"></script>

@@ -10,13 +10,14 @@
     private $dateofbirth;
     private $birthcert;
     private $userstatus;
+    private $contactnum;
     private $householdmode;
     private $joincode = null;
     private $longitude;
     private $latitude;
     private $area;
 
-    public function __construct($firstname,$lastname,$address,$email,$password,$confirmpass,$dateofbirth,$birthcert,$userstatus,
+    public function __construct($firstname,$lastname,$address,$email,$password,$confirmpass,$dateofbirth,$birthcert,$userstatus,$contactnum,
     $householdmode,$joincode,$longitude, $latitude, $area){
         parent::__construct();
         $this->firstname=$firstname;
@@ -28,6 +29,7 @@
         $this->dateofbirth=$dateofbirth;
         $this->birthcert=$birthcert;
         $this->userstatus=$userstatus;
+        $this->contactnum=$contactnum;
         $this->householdmode=$householdmode;
         $this->joincode=$joincode;
         $this->longitude=$longitude;
@@ -45,14 +47,14 @@
             exit();
         }
 
-        return $this->setUser($this->firstname,$this->lastname,$this->address,$this->email,$this->password,$this->dateofbirth,$this->birthcert,$this->userstatus,
+        return $this->setUser($this->firstname,$this->lastname,$this->address,$this->email,$this->password,$this->dateofbirth,$this->birthcert,$this->userstatus,$this->contactnum,
         $this->householdmode,$this->joincode,$this->longitude,$this->latitude,$this->area);
     }
 
     private function emptyinput(){
         $result;
         if(empty($this->firstname) || empty($this->lastname) || empty($this->address) || empty($this->email) || empty($this->password) || empty($this->confirmpass) || empty($this->dateofbirth) 
-            || empty($this->userstatus)){
+            || empty($this->userstatus) || empty($this->contactnum) || empty($this->longitude) || empty($this->latitude)){
             $result = false;
         } 
 
