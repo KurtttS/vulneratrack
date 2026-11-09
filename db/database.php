@@ -5,7 +5,7 @@ class database {
     private $db_server = "localhost";
     private $db_username = "root";
     private $db_password = "";
-    private $db_name = "vulneratrack_dbsuper";
+    private $db_name = "vulneratrack_db";
     protected $conn;
 
     public function __construct() {
