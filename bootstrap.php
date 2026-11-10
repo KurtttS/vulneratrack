@@ -155,6 +155,10 @@ final class PostgresSessionHandler implements SessionHandlerInterface
 }
 
 if (session_status() === PHP_SESSION_NONE) {
+    if (headers_sent($file, $line)) {
+        throw new RuntimeException("Session configuration must run before output; output began at {$file}:{$line}.");
+    }
+
     session_set_save_handler(new PostgresSessionHandler(), true);
     ini_set('session.use_strict_mode', '1');
     ini_set('session.cookie_httponly', '1');
