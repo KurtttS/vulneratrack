@@ -14,9 +14,9 @@ class reportingclass extends database {
     ) {
 
         $stmt = $this->getConnection()->prepare(
-            "INSERT INTO report
-            (Date_Sent, Report_Message, Type_of_Problem, Report_Image, Household_ID, report_address, report_status, located)
-            VALUES (NOW(), ?, ?, ?, ?, ?, 'unverified', ?)"
+            'INSERT INTO report
+            ("Date_Sent", "Report_Message", "Type_of_Problem", "Report_Image", "Household_ID", "report_address", "report_status", "located")
+            VALUES (CURRENT_DATE, ?, ?, ?, ?, ?, \'unverified\', ?)'
         );
 
         $stmt->execute([
@@ -32,10 +32,10 @@ class reportingclass extends database {
     protected function getReportsByHousehold($householdID)
     {
         $stmt = $this->getConnection()->prepare(
-            "SELECT *
+            'SELECT *
              FROM report
-             WHERE Household_ID = ?
-             ORDER BY Date_Sent DESC"
+             WHERE "Household_ID" = ?
+             ORDER BY "Date_Sent" DESC'
         );
 
         $stmt->execute([$householdID]);
@@ -47,7 +47,7 @@ class reportingclass extends database {
     protected function deleteReportById($id)
     {
         $stmt = $this->getConnection()->prepare(
-            "DELETE FROM report WHERE ReportID = ?"
+            'DELETE FROM report WHERE "ReportID" = ?'
         );
 
         return $stmt->execute([$id]);
@@ -61,7 +61,7 @@ class reportingclass extends database {
     public function getAllReports()
     {
         $stmt = $this->getConnection()->prepare(
-            "SELECT * FROM report ORDER BY Date_Sent DESC"
+            'SELECT * FROM report ORDER BY "Date_Sent" DESC'
         );
         $stmt->execute();
         return $stmt->fetchAll();

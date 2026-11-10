@@ -11,9 +11,9 @@ class adminreportfetchctrl extends reportingclass {
     public function fetchAllReports() {
 
         $stmt = $this->getConnection()->prepare(
-            "SELECT *
+            'SELECT *
              FROM report
-             ORDER BY Date_Sent DESC"
+             ORDER BY "Date_Sent" DESC'
         );
 
         $stmt->execute();
@@ -23,9 +23,9 @@ class adminreportfetchctrl extends reportingclass {
     public function fetchSingleReport($id)
     {
         $stmt = $this->getConnection()->prepare(
-            "SELECT *
+            'SELECT *
              FROM report
-             WHERE ReportID = ?"
+             WHERE "ReportID" = ?'
         );
 
         $stmt->execute([$id]);
@@ -34,24 +34,27 @@ class adminreportfetchctrl extends reportingclass {
 
 public function fetchReportsPaginated($limit, $offset, $search = '', $status = '')
 {
-    $sql = "SELECT * FROM report WHERE 1=1";
+    $sql = 'SELECT * FROM report WHERE 1=1';
 
     if (!empty($search)) {
-        $sql .= " AND (report_address LIKE :search 
-                   OR located LIKE :search 
-                   OR Type_of_Problem LIKE :search)";
+        $sql .= ' AND ("report_address" ILIKE :search_address
+                   OR "located" ILIKE :search_located
+                   OR "Type_of_Problem" ILIKE :search_problem)';
     }
 
     if (!empty($status)) {
-        $sql .= " AND report_status = :status";
+        $sql .= ' AND "report_status" = :status';
     }
 
-    $sql .= " ORDER BY Date_Sent DESC LIMIT :limit OFFSET :offset";
+    $sql .= ' ORDER BY "Date_Sent" DESC LIMIT :limit OFFSET :offset';
 
     $stmt = $this->getConnection()->prepare($sql);
 
     if (!empty($search)) {
-        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        $searchValue = "%$search%";
+        $stmt->bindValue(':search_address', $searchValue, PDO::PARAM_STR);
+        $stmt->bindValue(':search_located', $searchValue, PDO::PARAM_STR);
+        $stmt->bindValue(':search_problem', $searchValue, PDO::PARAM_STR);
     }
 
     if (!empty($status)) {
@@ -67,22 +70,25 @@ public function fetchReportsPaginated($limit, $offset, $search = '', $status = '
 
 public function countFilteredReports($search = '', $status = '')
 {
-    $sql = "SELECT COUNT(*) FROM report WHERE 1=1";
+    $sql = 'SELECT COUNT(*) FROM report WHERE 1=1';
 
     if (!empty($search)) {
-        $sql .= " AND (report_address LIKE :search 
-                   OR located LIKE :search 
-                   OR Type_of_Problem LIKE :search)";
+        $sql .= ' AND ("report_address" ILIKE :search_address
+                   OR "located" ILIKE :search_located
+                   OR "Type_of_Problem" ILIKE :search_problem)';
     }
 
     if (!empty($status)) {
-        $sql .= " AND report_status = :status";
+        $sql .= ' AND "report_status" = :status';
     }
 
     $stmt = $this->getConnection()->prepare($sql);
 
     if (!empty($search)) {
-        $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+        $searchValue = "%$search%";
+        $stmt->bindValue(':search_address', $searchValue, PDO::PARAM_STR);
+        $stmt->bindValue(':search_located', $searchValue, PDO::PARAM_STR);
+        $stmt->bindValue(':search_problem', $searchValue, PDO::PARAM_STR);
     }
 
     if (!empty($status)) {

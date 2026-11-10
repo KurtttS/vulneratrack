@@ -6,12 +6,12 @@ class pointsystem extends database {
 
         $db = $this->getConnection();
 
-        $areaSql = "SELECT Area_Name FROM area WHERE AreaID = ?";
+        $areaSql = 'SELECT "Area_Name" FROM area WHERE "AreaID" = ?';
         $areaStmt = $db->prepare($areaSql);
         $areaStmt->execute([$areaID]);
         $area = $areaStmt->fetch();
 
-        $riskSql = "SELECT * FROM vulnerability WHERE Area_ID = ?";
+        $riskSql = 'SELECT * FROM vulnerability WHERE "Area_ID" = ?';
         $riskStmt = $db->prepare($riskSql);
         $riskStmt->execute([$areaID]);
         $risks = $riskStmt->fetchAll();
@@ -24,15 +24,15 @@ class pointsystem extends database {
 
     public function deleteVulnerabilityRecord($id) {
         $db = $this->getConnection();
-        $sql = "DELETE FROM vulnerability WHERE VulnerabilityID = ?";
+        $sql = 'DELETE FROM vulnerability WHERE "VulnerabilityID" = ?';
         $stmt = $db->prepare($sql);
         return $stmt->execute([$id]);
     }
 
     public function areaAdd($areaID, $name, $points) {
         $db = $this->getConnection();
-        $sql = "INSERT INTO vulnerability (Type_of_Vulnerablity, Vulnerability_Points, Area_ID) 
-        VALUES (?, ?, ?)";
+        $sql = 'INSERT INTO vulnerability ("Type_of_Vulnerablity", "Vulnerability_Points", "Area_ID")
+        VALUES (?, ?, ?)';
                 
         $stmt = $db->prepare($sql);
         return $stmt->execute([$name, $points, $areaID]);
@@ -42,7 +42,7 @@ class pointsystem extends database {
     public function getHouseholdAssessment($HouseholdId) {
         $db = $this->getConnection();
 
-        $areaIdSql = "SELECT Area_ID FROM household WHERE HouseholdID = ?";
+        $areaIdSql = 'SELECT "Area_ID" FROM household WHERE "HouseholdID" = ?';
         $areaIdStmt = $db->prepare($areaIdSql);
         $areaIdStmt->execute([$HouseholdId]);
         $areaResult = $areaIdStmt->fetch(PDO::FETCH_ASSOC);
@@ -51,29 +51,29 @@ class pointsystem extends database {
 
         $areaID = $areaResult['Area_ID'];
 
-        $areaSql = "SELECT Area_Name FROM area WHERE AreaID = ?";
+        $areaSql = 'SELECT "Area_Name" FROM area WHERE "AreaID" = ?';
         $areaStmt = $db->prepare($areaSql);
         $areaStmt->execute([$areaID]);
         $area = $areaStmt->fetch(PDO::FETCH_ASSOC);
 
-        $riskSql = "SELECT * FROM vulnerability WHERE Area_ID = ?";
+        $riskSql = 'SELECT * FROM vulnerability WHERE "Area_ID" = ?';
         $riskStmt = $db->prepare($riskSql);
         $riskStmt->execute([$areaID]);
         $areaRisks = $riskStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $houseriskSql = "SELECT * FROM vulnerability WHERE Household_ID = ?";
+        $houseriskSql = 'SELECT * FROM vulnerability WHERE "Household_ID" = ?';
         $houseriskStmt = $db->prepare($houseriskSql);
         $houseriskStmt->execute([$HouseholdId]);
         $houseRisks = $houseriskStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $householdSql = "SELECT h.HouseholdID, h.CoordinateX, h.CoordinateY,
-        COALESCE(SUM(CASE WHEN u.User_Status = 'PWD' THEN 1 ELSE 0 END), 0) as pwd_count,
-        COALESCE(SUM(CASE WHEN u.User_Status = 'Senior Citizen' THEN 1 ELSE 0 END), 0) as elderly_count,
-        COALESCE(SUM(CASE WHEN u.User_Status = 'Child' THEN 1 ELSE 0 END), 0) as child_count
+        $householdSql = 'SELECT h."HouseholdID", h."CoordinateX", h."CoordinateY",
+        COALESCE(SUM(CASE WHEN u."User_Status" = \'PWD\' THEN 1 ELSE 0 END), 0) as pwd_count,
+        COALESCE(SUM(CASE WHEN u."User_Status" = \'Senior Citizen\' THEN 1 ELSE 0 END), 0) as elderly_count,
+        COALESCE(SUM(CASE WHEN u."User_Status" = \'Child\' THEN 1 ELSE 0 END), 0) as child_count
         FROM household h 
-        LEFT JOIN member m ON h.HouseholdID = m.Household_ID
-        LEFT JOIN `user` u ON m.User_ID = u.UserID
-        WHERE h.HouseholdID = ? GROUP BY h.HouseholdID";
+        LEFT JOIN member m ON h."HouseholdID" = m."Household_ID"
+        LEFT JOIN "user" u ON m."User_ID" = u."UserID"
+        WHERE h."HouseholdID" = ? GROUP BY h."HouseholdID"';
         
         $hhStmt = $db->prepare($householdSql);
         $hhStmt->execute([$HouseholdId]);
@@ -89,8 +89,8 @@ class pointsystem extends database {
 
     public function householdAdd($householdID, $name, $points) {
         $db = $this->getConnection();
-        $sql = "INSERT INTO vulnerability (Type_of_Vulnerablity, Vulnerability_Points, Household_ID) 
-        VALUES (?, ?, ?)";
+        $sql = 'INSERT INTO vulnerability ("Type_of_Vulnerablity", "Vulnerability_Points", "Household_ID")
+        VALUES (?, ?, ?)';
                 
         $stmt = $db->prepare($sql);
         return $stmt->execute([$name, $points, $householdID]);
@@ -98,7 +98,7 @@ class pointsystem extends database {
 
     public function  fetchhouseholdcontacts($householdID){
         $db = $this->getConnection();
-        $sql =  "SELECT u.First_Name, u.Last_Name, u.Contact_Number FROM user u JOIN member m ON u.UserID = m.User_ID WHERE m.Household_ID = ?";
+        $sql = 'SELECT u."First_Name", u."Last_Name", u."Contact_Number" FROM "user" u JOIN member m ON u."UserID" = m."User_ID" WHERE m."Household_ID" = ?';
 
         $stmt = $db->prepare($sql);
         $stmt->execute([$householdID]);
@@ -107,9 +107,9 @@ class pointsystem extends database {
 
     public function fetchareacontacts($areaID) {
         $db = $this->getConnection();
-        $sql = "SELECT u.First_Name, u.Last_Name, u.Contact_Number, h.HouseholdID,h.Area_ID FROM `user` u JOIN `member` m ON u.UserID = m.User_ID
-                JOIN `household` h ON m.Household_ID = h.HouseholdID
-                WHERE h.Area_ID = ? AND u.Contact_Number IS NOT NULL";
+        $sql = 'SELECT u."First_Name", u."Last_Name", u."Contact_Number", h."HouseholdID", h."Area_ID" FROM "user" u JOIN member m ON u."UserID" = m."User_ID"
+                JOIN household h ON m."Household_ID" = h."HouseholdID"
+                WHERE h."Area_ID" = ? AND u."Contact_Number" IS NOT NULL';
 
         $stmt = $db->prepare($sql);
         $stmt->execute([$areaID]);
