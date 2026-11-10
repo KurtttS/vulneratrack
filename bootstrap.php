@@ -10,6 +10,33 @@ function appEnvironment(string $name, ?string $default = null): ?string
     return $value === false || $value === null ? $default : $value;
 }
 
+function appStartSession(): void
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return;
+    }
+
+    if (headers_sent($file, $line)) {
+        throw new RuntimeException("Session must start before output; output began at {$file}:{$line}.");
+    }
+
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+
+    if (!session_start()) {
+        throw new RuntimeException('Unable to start the application session.');
+    }
+}
+
+function appRequireAuthenticatedUser(string $redirectLocation = '../index.php'): void
+{
+    if (!isset($_SESSION['userid'])) {
+        header('Location: ' . $redirectLocation);
+        exit();
+    }
+}
+
 function appCreateDatabaseConnection(): PDO
 {
     $host = appEnvironment('SUPABASE_DB_HOST');

@@ -1,23 +1,6 @@
 <link rel="stylesheet" href="../style/adminmobile.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<?php
-require_once __DIR__ . '/../bootstrap.php';
-ob_start();
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (!isset($_SESSION["userid"])) {
-    header("Location: ../index.php");
-    exit();
-}
-?>
-
 <div class="sidebar">
     <div class="sidebar-header">
         <i class="fa-solid fa-bars sidebar-hamburger"></i>

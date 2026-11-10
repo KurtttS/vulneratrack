@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
+appStartSession();
+appRequireAuthenticatedUser();
 include __DIR__ . '/../db/database.php';
 include __DIR__ . '/../classes/reportingclass.php';
 include __DIR__ . '/../processes/adminreportfetchctrl.php';
