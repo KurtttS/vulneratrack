@@ -1,7 +1,8 @@
 FROM dunglas/frankenphp:1-php8.4-alpine AS base
 
 WORKDIR /app
-RUN install-php-extensions pdo_pgsql curl
+RUN install-php-extensions pdo_pgsql curl \
+    && printf 'upload_max_filesize=50M\npost_max_size=110M\n' > /usr/local/etc/php/conf.d/uploads.ini
 
 FROM base AS dependencies
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

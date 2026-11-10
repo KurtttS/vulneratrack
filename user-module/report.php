@@ -26,6 +26,11 @@ appRequireAuthenticatedUser();
     <div class="report-main-content">
       <div class="report-container">
     <h1>Report</h1>
+    <?php if (($_GET['error'] ?? '') === 'upload'): ?>
+        <p class="report-error" role="alert">
+            We couldn't submit your report. Check that attachments are supported files and within the size limits, then try again.
+        </p>
+    <?php endif; ?>
     <form class="report-form"
       action="../router/reporting.php"
       method="POST"
@@ -61,7 +66,14 @@ appRequireAuthenticatedUser();
 
                 <div class="input-group file-upload">
                     <label for="file-input" id="reportFilesLabel">+ Add Photo for the problem</label>
-                    <input type="file" id="file-input" name="report_files[]" multiple>
+                    <input
+                        type="file"
+                        id="file-input"
+                        name="report_files[]"
+                        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                        multiple
+                    >
+                    <p>JPEG, PNG, WebP, GIF, or PDF. Maximum 50 MB per file and 110 MB per request.</p>
                 </div>
             </div>
 

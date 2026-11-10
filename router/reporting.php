@@ -25,7 +25,13 @@ if (isset($_POST['submit_report'])) {
         $located
     );
 
-    $report->submitReport();
+    try {
+        $report->submitReport();
+    } catch (RuntimeException $error) {
+        error_log('Report submission failed: ' . $error->getMessage());
+        header("location: ../user-module/report.php?error=upload");
+        exit();
+    }
 
     header("location: ../user-module/history.php?report=success");
     exit();

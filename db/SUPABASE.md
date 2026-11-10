@@ -12,7 +12,7 @@
    - `SUPABASE_SERVICE_ROLE_KEY` (server-side secret key; never expose it in browser code)
    - `SUPABASE_REPORT_BUCKET` (optional; defaults to `report-uploads`)
    - `GEMINI_API_KEY` (required for the chatbot)
-4. Ensure PHP has `pdo_pgsql` and `curl` enabled. On XAMPP, enable those extensions in `php.ini` and restart Apache. Connections require SSL.
+4. Ensure PHP has `pdo_pgsql` and `curl` enabled. Set `upload_max_filesize=50M` and `post_max_size=110M` to support report attachments. The Docker image configures these limits automatically; on XAMPP, set them in `php.ini` and restart Apache. Connections require SSL.
 5. The schema additions create the private PostgreSQL session table and private `report-uploads` Storage bucket. If you set a custom `SUPABASE_REPORT_BUCKET`, create that private bucket in Supabase as well. New report attachments are uploaded to Storage and viewed through signed links. Existing files in `uploads/reports` are not copied automatically; old report-image references will need to be migrated if you need to keep them.
 
 ## Vercel deployment
