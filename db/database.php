@@ -1,17 +1,26 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+
 class database {
 
     protected $conn;
 
     public function __construct() {
-        $host = getenv('SUPABASE_DB_HOST');
-        $port = getenv('SUPABASE_DB_PORT') ?: '5432';
-        $database = getenv('SUPABASE_DB_NAME');
-        $username = getenv('SUPABASE_DB_USER');
-        $password = getenv('SUPABASE_DB_PASSWORD');
+        $getEnvironmentValue = static function (string $name): ?string {
+            $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
+            return $value === false ? null : $value;
+        };
 
-        if (!$host || !$database || !$username || $password === false) {
+        $host = $getEnvironmentValue('SUPABASE_DB_HOST');
+        $port = $getEnvironmentValue('SUPABASE_DB_PORT') ?? '5432';
+        $database = $getEnvironmentValue('SUPABASE_DB_NAME');
+        $username = $getEnvironmentValue('SUPABASE_DB_USER');
+        $password = $getEnvironmentValue('SUPABASE_DB_PASSWORD');
+
+        if (!$host || !$database || !$username || $password === null || $password === '') {
             throw new RuntimeException(
                 'Set SUPABASE_DB_HOST, SUPABASE_DB_NAME, SUPABASE_DB_USER, and SUPABASE_DB_PASSWORD.'
             );
