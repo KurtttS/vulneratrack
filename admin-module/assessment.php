@@ -1,7 +1,10 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';
+appStartSession();
+appRequireAuthenticatedUser();
+include __DIR__ . '/../router/pointsystemrouter.php';
+?>
 <!DOCTYPE html>
-<?php 
- include __DIR__ ."/../router/pointsystemrouter.php";
- ?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

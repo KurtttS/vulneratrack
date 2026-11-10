@@ -1,7 +1,8 @@
 
 <?php
 require_once __DIR__ . '/../bootstrap.php';
-session_start();
+appStartSession();
+appRequireAuthenticatedUser();
 include '../processes/statsctrl.php';
 ?>
 <!DOCTYPE html>

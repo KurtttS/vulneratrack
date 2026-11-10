@@ -1,4 +1,7 @@
-<?php 
+<?php
+require_once __DIR__ . '/../bootstrap.php';
+appStartSession();
+appRequireAuthenticatedUser();
 include '../processes/statsctrl.php'; 
 ?>
 <!DOCTYPE html>

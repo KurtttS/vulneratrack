@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../bootstrap.php';
-session_start();
+appStartSession();
+appRequireAuthenticatedUser();
 
 include __DIR__ . "/../db/database.php";
 include __DIR__ . "/../classes/reportingclass.php";

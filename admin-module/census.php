@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
+appStartSession();
+appRequireAuthenticatedUser();
 require_once '../processes/censusctrl.php';
 $controller = new CensusCtrl();
 $data = $controller->handleRequest();
