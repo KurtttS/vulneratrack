@@ -1,8 +1,8 @@
 # Supabase PostgreSQL setup
 
 1. For a fresh database, run [`supabase_schema.sql`](./supabase_schema.sql) in the Supabase SQL Editor. If the original application schema is already installed, run only the block between `BEGIN VERCEL DEPLOYMENT ADDITIONS` and `END VERCEL DEPLOYMENT ADDITIONS` at the bottom of that file. That block is safe to rerun.
-2. Run `composer install` from the project root to install the `.env` loader.
-3. Set these variables in the root `.env` file; it is loaded automatically. Never commit secrets:
+2. Copy the root `.env.example` to `.env` and fill in your credentials. On initial setup (or after `composer.json` or `composer.lock` changes), run `composer install` from the project root to install dependencies. You do not need to run it before every push.
+3. Fill in the required values in `.env`; it is loaded automatically. Never commit `.env` or expose its secrets:
    - `SUPABASE_DB_HOST`
    - `SUPABASE_DB_PORT` (optional; defaults to `5432`)
    - `SUPABASE_DB_NAME` (usually `postgres`)
