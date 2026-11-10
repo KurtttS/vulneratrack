@@ -141,7 +141,6 @@
             $_SESSION["total_points"] = $result['total_points'];
             $_SESSION["risk_grade"]   = $result['grade'];
 
-            $_SESSION["risk_assessment"] = $riskData;
                 if($_SESSION["usertype"]==='user') {
                 header("location: ../user-module/home.php?login=success");
                 exit();
