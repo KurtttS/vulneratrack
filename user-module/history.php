@@ -1,8 +1,10 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
 session_start();
 
 include __DIR__ . "/../db/database.php";
 include __DIR__ . "/../classes/reportingclass.php";
+require_once __DIR__ . "/../classes/supabasestorage.php";
 include __DIR__ . "/../processes/reportfetchctrl.php";
 
 $fetch = new reportfetchctrl($_SESSION['householdid'] ?? 0);

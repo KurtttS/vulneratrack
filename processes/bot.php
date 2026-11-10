@@ -1,12 +1,19 @@
 <?php
 // bot.php
+require_once __DIR__ . '/../bootstrap.php';
 session_start();
 session_write_close(); // Safely close session to prevent file locks
 
 header('Content-Type: application/json');
 
 // Replace with your actual Gemini API Key
-define('GEMINI_API_KEY', 'AQ.Ab8RN6J1byaPkGLtk-_yMdR5JlvPGAjKvrwP1QNajHRPUPdB-Q');
+$geminiApiKey = appEnvironment('GEMINI_API_KEY');
+if ($geminiApiKey === null || $geminiApiKey === '') {
+    http_response_code(500);
+    echo json_encode(['error' => 'AI service is not configured.']);
+    exit;
+}
+define('GEMINI_API_KEY', $geminiApiKey);
 define('GEMINI_MODEL', 'gemini-1.5-flash');
 
 $inputData = json_decode(file_get_contents('php://input'), true);

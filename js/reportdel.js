@@ -71,12 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //MODAL FOR PICTURE
 
-function openImageModal(filename)
+function openImageModal(imageUrl)
 {
     const modal = document.getElementById("imageModal");
     const img   = document.getElementById("modalImage");
 
-    img.src = "../uploads/reports/" + filename;
+    img.src = imageUrl;
     modal.style.display = "flex";
 }
 
@@ -84,4 +84,3 @@ function closeImageModal()
 {
     document.getElementById("imageModal").style.display = "none";
 }
-

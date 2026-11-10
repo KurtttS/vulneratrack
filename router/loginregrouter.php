@@ -1,4 +1,5 @@
 <?php
+    require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
     //Signup function
@@ -157,7 +158,6 @@
     }
 
     if (isset($_POST["signout"])) {
-        session_start();
         session_unset();
         session_destroy();
         header("location: ../index.php?signout=success");

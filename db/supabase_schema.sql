@@ -69,3 +69,23 @@ INSERT INTO area ("AreaID", "Area_Name") VALUES
     (2, 'East Homes'),
     (3, 'Purok Carvic')
 ON CONFLICT ("AreaID") DO NOTHING;
+
+-- BEGIN VERCEL DEPLOYMENT ADDITIONS
+-- If the original application schema is already installed, run only this block.
+CREATE SCHEMA IF NOT EXISTS app_private;
+REVOKE ALL ON SCHEMA app_private FROM PUBLIC, anon, authenticated;
+
+CREATE TABLE IF NOT EXISTS app_private.php_sessions (
+    session_id varchar(128) PRIMARY KEY,
+    session_data text NOT NULL,
+    last_activity bigint NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS php_sessions_last_activity_idx
+    ON app_private.php_sessions (last_activity);
+REVOKE ALL ON TABLE app_private.php_sessions FROM PUBLIC, anon, authenticated;
+
+INSERT INTO storage.buckets (id, name, public) VALUES
+    ('report-uploads', 'report-uploads', false)
+ON CONFLICT (id) DO UPDATE SET public = false;
+-- END VERCEL DEPLOYMENT ADDITIONS
