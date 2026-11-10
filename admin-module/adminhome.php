@@ -25,35 +25,46 @@
                    
                 <div class="main-content">
                     <div class="header-section">
-                        <div class="overview-btn">NO MORE OVERVIEW</div>
+                        <div class="overview-btn">Overview</div>
                         <div class="header-line"></div>
                     </div>
 
+                           
+                
                     <div class="dashboard-grid">
+                        
                         <div class="column stats-column">
+                                       <form method = "POST" action="../processes/genpdf.php" target="_blank">
+                    <button type= "submit" value="GeneratePDF" class="GeneratePDF">View Census & Reports PDF</button>
+                </form>
                             <div class="card stat-card">
-                                <p>Total Vulnerable Population</p>
-                                <h2>785</h2>
+                                <p>Total Population</p>
+                                <h2 id = "total-pop"></h2>
                             </div>
                             <div class="card stat-card">
-                                <p>Areas Monitored</p>
+                                <p>Areas Secured</p>
                                 <h2>3</h2>
                             </div>
                             <div class="card stat-card">
-                                <p>Reports real time</p>
-                                <h2>7</h2>
+                                <p>Total Reports</p>
+                                <h2 id = "total-rep"></h2>
                             </div>
+                
+
                         </div>
 
+
+                        
                         <div class="column chart-column">
                             <div class="card distribution-card">
-                                <h3>Vulnerable Population Distribution</h3>
+                                <h3>Total Population Distribution</h3>
                                 <div class="chart-container">
-                                    <div class="pie-chart"></div>
+                                    <canvas id="myPieChart"></canvas>
                                 </div>
                                 <div class="chart-legend">
-                                    <div class="legend-item"><i class="dot blue"></i> Pregnant Women </div>
-                                    <div class="legend-item"><i class="dot dark-blue"></i> Senior Citizens </div>
+                                    <div class="legend-item"><i class="dot light-blue" ></i> Adult </div>
+                                    <div class="legend-item"><i class="dot mid-blue"></i> Child</div>
+                                    <div class="legend-item"><i class="dot royal-blue"></i> Senior Citizen </div>
                                     <div class="legend-item"><i class="dot navy"></i> PWD </div>
                                 </div>
                             </div>
@@ -71,19 +82,18 @@
                             
                             <div class="card high-risk-card">
                                 <p>High risk count</p>
-                                <h2 class="text-danger">14</h2>
+                                <h2 class="text-danger"></h2>
                             </div>
                             <div class="card reports-card">
                                 <h3>Recent Reports</h3>
-                                <div class="report-entry text-red">Concern Report - Blk 3 lot 9 Villa Angela Phase 1</div>
-                                <div class="report-entry text-orange">Emergency Report - Blk 2 lot 1 Villa Angela Phase 1</div>
-                                <div class="report-entry text-orange">Emergency Report - Blk 2 lot 1 Villa Angela Phase 1</div>
+                                <div id="recent-reports-list">
+                                </div>
                             </div>
                         </div> 
                     </div> <div class="map-section">
-                        <div class="map-label">Map</div>
+                        <div class="overview-map-label">Areas Secured</div>
                         <div class="map-wrapper">
-                            <div id="map" style="width: 100%; height: 100%;"></div>
+                            <div id="overview-map" style="width: 100%; height: 100%;"></div>
                         </div>
                     </div>
                 </div> 
@@ -92,7 +102,7 @@
         include '../nav/footer.php'; ?>
 </div>
         </div>
-
-    <script src="../js/overviewmap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/overview.js"></script>
 </body>
 </html>

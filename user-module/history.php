@@ -1,8 +1,10 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
 session_start();
 
 include __DIR__ . "/../db/database.php";
 include __DIR__ . "/../classes/reportingclass.php";
+require_once __DIR__ . "/../classes/supabasestorage.php";
 include __DIR__ . "/../processes/reportfetchctrl.php";
 
 $fetch = new reportfetchctrl($_SESSION['householdid'] ?? 0);
@@ -38,10 +40,10 @@ $reports = $fetch->fetchReports();
                 <div class="name-status-container">
  <div class="profile-name"><?php echo $_SESSION["firstName"]." ".$_SESSION["lastName"]?></div>
                     <div class="status">
-                        Your Location: <?php echo $_SESSION["address"]; ?> <br>
-                        Vulnerability Status: <span class="high-risk"><?= $_SESSION["risk_grade"] ?></span>
+                     
+                        Vulnerability Status: <span id="riskText"><?= $_SESSION["risk_grade"] ?></span>
                         <br>
-                         Household code: <span class="code"><?php echo $_SESSION["householdid"]; ?></span>
+                        Household Code: <span class="code"><?php echo $_SESSION["householdid"]; ?></span>
                     </div>
                 </div>
             </div>

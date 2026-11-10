@@ -245,6 +245,11 @@ input:focus, select:focus {
     background-position: right 22px center; 
 }
 
+.num {
+    grid-column: span 2; /* makes it take full width */
+    width: 100%;
+}
+
 .signup-form input, 
 .signup-form select {
     width: 100%; 
@@ -454,4 +459,9 @@ input:focus, select:focus {
         .modal-content p { color: #666; margin-bottom: 1.5rem; }
 
 
-        /*show password*/
+    @media (max-width: 768px) {
+
+body{
+     background: linear-gradient(white, #ffffff, #ffffff, #06045d); 
+}
+    }

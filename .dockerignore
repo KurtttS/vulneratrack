@@ -1,0 +1,10 @@
+.env*
+.git
+.github
+.vscode
+vendor
+uploads
+node_modules
+*.sql
+db/*.sql
+composer.phar

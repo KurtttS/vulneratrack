@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+require_once __DIR__ . '/../bootstrap.php';
 session_start();
 ?>
 <html lang="en">
@@ -36,33 +37,36 @@ session_start();
                     <select name="problem_type" required>
                         <option value="" disabled selected>Type of Problem</option>
                         <option value="Drainage">Clogged/Damaged Drainage</option>
-                        <option value="Power Interruption">Power Interruption</option>
+                        <option value="Road Potholes">Road Potholes</option>
                         <option value="Rising Water Level">Rising Water Level</option>
                         <option value="Blocked Road">Blocked Road</option>
                         <option value="Standing Water">Standing Water</option>
+						<option value="Other">Other</option>
                     </select>
                 </div>
 
                 <div class="input-group">
-   <select name="address" required>
-     <option value="" disabled selected>Address</option>
-    <option value="<?php echo $_SESSION['address']; ?>">
-        <?php echo $_SESSION['address']; ?>
-    </option>
-</select>
+    <input
+    type="text"
+    name="address"
+    placeholder="Enter location of the problem"
+    value="<?php echo htmlspecialchars($_SESSION['located'] ?? '', ENT_QUOTES); ?>"
+    required
+>
+
 
 
                 </div>
 
                 <div class="input-group file-upload">
-                    <label for="file-input" id="reportFilesLabel">+ Add Files</label>
+                    <label for="file-input" id="reportFilesLabel">+ Add Photo for the problem</label>
                     <input type="file" id="file-input" name="report_files[]" multiple>
                 </div>
             </div>
 
             <div class="form-right">
                 <label class="desc-label">Elaborate on the issue</label>
-                <textarea name="description" placeholder="Write details here..."></textarea>
+                <textarea name="description" placeholder="Write details here..." required></textarea>
             </div>
         </div>
 

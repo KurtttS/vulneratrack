@@ -340,9 +340,6 @@
     color: #4a6cf7 !important;
 }
 
-
-
-
 /*profile*/
 .profile-container {
     position: relative;
@@ -432,10 +429,54 @@
     transform: translateY(-2px); 
     box-shadow: 0 4px 10px rgba(74, 108, 247, 0.2);
 }
+
 /*END*/
+.mobile-logo img {
+    height: 50px;      
+    width: auto;        
+    display: block;     
+}
+
+.mobile-logo {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .desktop-logo {
+        display: none;
+    }
+
+    .mobile-logo {
+        display: block;
+    }
+
+    
+}
 
 @media (min-width: 769px) {
 .footer-right {
     align-items: flex-end;
+}
+}
+
+
+
+
+/*LOGIN, SIGNUP, FOOTER*/
+
+.logfoot {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #c3cef0;
+    position: fixed;
+    bottom: 15px;
+    left: 0;
+}
+
+@media (max-width: 769px) {
+.logfoot {
+    position: static;
+    margin-top: -40px;
 }
 }

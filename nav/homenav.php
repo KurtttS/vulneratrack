@@ -1,8 +1,27 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';
+ob_start();
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION["userid"])) {
+    header("Location: ../index.php");
+    exit();
+}
+?>
 
 <header class="homeheader-nav">
-    <div class="homeheader-logo" >
+    <div class="homeheader-logo desktop-logo">
         <img src="<?php echo $path_to_root ?? ''; ?>style/imgs/headerlogo.png" alt="Logo">    
+    </div>
+
+    <div class="mobile-logo">
+        <img src="<?php echo $path_to_root ?? ''; ?>style/imgs/vulnemobile.png" alt="Logo">
     </div>
 
     <div class="hamburger" id="hamburger">
@@ -13,6 +32,7 @@
         <a href="home.php">Home</a>
         <a href="usermap.php">Map</a>
         <a href="report.php">Report</a>
+        <a href="faq.php">FAQ</a>
         <a href="profile.php" class="mobile-only-profile">Profile</a>
         <a href="../index.php" class="mobile-only-profile">Sign Out</a>
     </nav>
@@ -23,11 +43,10 @@
     <div class="notification-dropdown" id="notificationDropdown">
         <div class="dropdown-header">
             <h1>Notifications</h1>
-            <h2>coming soon Feature</h2>
         </div>
         <hr>
         <div class="notification-list">
-            <a href="#"><i class="fa-solid fa-circle-info"></i> &nbsp COMING SOON</a>
+            <a href="#"><i class="fa-solid fa-circle-info"></i> &nbsp No recent notifications</a>
         </div>
     </div>
 </div>
@@ -47,9 +66,6 @@
         </div>
     </div>
 
-
-
-
     <script src="../js/profile.js"></script>
-
+    <script src="../js/security.js"></script>
 </header>

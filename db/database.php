@@ -1,31 +1,27 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+Dotenv\Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
+
+require_once __DIR__ . '/../bootstrap.php';
+
 class database {
 
-    private $db_server = "localhost";
-    private $db_username = "root";
-    private $db_password = "";
-    private $db_name = "vulneratrack_dbsuper";
     protected $conn;
 
     public function __construct() {
         try {
-            $dsn = "mysql:host={$this->db_server};dbname={$this->db_name};charset=utf8mb4";
-
-            $this->conn = new PDO($dsn, $this->db_username, $this->db_password);
-
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
+            $this->conn = appDatabaseConnection();
         } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+            throw new RuntimeException('Supabase PostgreSQL connection failed.', 0, $e);
         }
     }
 
     protected function getConnection() {
-    if ($this->conn === null) {
-        $this->__construct(); 
+        if ($this->conn === null) {
+            $this->__construct();
+        }
+        return $this->conn;
     }
-    return $this->conn;
-}
 }

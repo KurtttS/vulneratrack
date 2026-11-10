@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../classes/reportingclass.php';
+require_once __DIR__ . '/../classes/supabasestorage.php';
 
 class reportctrl extends reportingclass {
 
@@ -10,15 +11,19 @@ class reportctrl extends reportingclass {
     private $files;
     private $householdID;
     private $report_address;
+    private $located;
+    private SupabaseStorage $storage;
 
 
-    public function __construct($type, $description, $files, $householdID, $report_address) {
+    public function __construct($type, $description, $files, $householdID, $report_address, $located) {
         parent::__construct();
         $this->type = $type;
         $this->description = $description;
         $this->files = $files;
         $this->householdID = $householdID;
         $this->report_address = $report_address;
+        $this->located = $located;
+        $this->storage = new SupabaseStorage();
     }
 
     public function submitReport() {
@@ -28,6 +33,7 @@ class reportctrl extends reportingclass {
             exit();
         }
 
+        
         $storedFiles = $this->uploadFiles();
 
         $this->createReport(
@@ -35,7 +41,8 @@ class reportctrl extends reportingclass {
             $this->description,
             $storedFiles,
             $this->householdID,
-            $this->report_address
+            $this->report_address,
+             $this->located
         );
     }
 
@@ -57,25 +64,22 @@ class reportctrl extends reportingclass {
 
         if (!empty($this->files['name'][0])) {
 
-            $uploadPath = __DIR__ . "/../uploads/reports/";
-
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-
             for ($i = 0; $i < count($this->files['name']); $i++) {
-
-                if ($this->files['error'][$i] === 0) {
-
-                    $newName = time() . "_" . basename($this->files['name'][$i]);
-
-                    move_uploaded_file(
-                        $this->files['tmp_name'][$i],
-                        $uploadPath . $newName
-                    );
-
-                    $saved[] = $newName;
+                if ($this->files['error'][$i] !== UPLOAD_ERR_OK) {
+                    throw new RuntimeException('A report attachment could not be uploaded.');
                 }
+
+                $temporaryPath = $this->files['tmp_name'][$i];
+                if (!is_uploaded_file($temporaryPath)) {
+                    throw new RuntimeException('A report attachment is invalid.');
+                }
+
+                $mimeType = (new finfo(FILEINFO_MIME_TYPE))->file($temporaryPath);
+                if (!is_string($mimeType)) {
+                    throw new RuntimeException('Unable to determine an attachment file type.');
+                }
+
+                $saved[] = $this->storage->uploadReportFile($temporaryPath, $mimeType);
             }
         }
 
