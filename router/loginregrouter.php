@@ -155,6 +155,8 @@
         }
     }
 
+
+    // Google Sign-In Handler
     if (isset($_POST["google_token"])) {
         $id_token = $_POST["google_token"];
 
@@ -172,23 +174,32 @@
             $googleEmail = $payload['email'];
             $googleFirstName = $payload['given_name'] ?? '';
             $googleLastName = $payload['family_name'] ?? '';
+            
+            // Default placeholder address for Gmail sign-ins
+            $defaultAddress = "Purok Carvic";
 
             include __DIR__ . "/../db/database.php";
-            include __DIR__ . "/../classes/userrepository.php";
-            include __DIR__ . "/../processes/repositoryctrl.php";
 
-            $userRepo = new repositoryctrl();
-            
-            $userData = $userRepo->getUserDataByEmail($googleEmail);
+            // Check if user exists directly in the database
+            $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ?");
+            $stmt->execute([$googleEmail]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($userData) {
-                $user = $userData['user'];
-                $householdloc = $userData['house_location'] ?? null;
+            if ($user) {
+                $householdId = $user['Household_ID'] ?? null;
+                $householdloc = null;
+
+                if ($householdId) {
+                    $stmtLoc = $conn->prepare("SELECT * FROM household_locations WHERE Household_ID = ?");
+                    $stmtLoc->execute([$householdId]);
+                    $householdloc = $stmtLoc->fetch(PDO::FETCH_ASSOC);
+                }
 
                 $_SESSION["userid"] = $user['UserID'];
                 $_SESSION["firstName"] = $user['First_Name'];
                 $_SESSION["lastName"] = $user['Last_Name'];
-                $_SESSION["address"] = $user['Address'];
+                // Use existing address, or fallback to "Purok Carvic" if empty
+                $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
                 $_SESSION["email"] = $user['Email'];
                 $_SESSION["usertype"] = $user['User_Type'];
                 $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
@@ -197,21 +208,19 @@
                 $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
                 $_SESSION["status"] = $user['User_Status'] ?? '';
                 $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
-                $_SESSION["householdid"] = $user['Household_ID'] ?? '';
-                $_SESSION["household_members"] = $userData['household_members'] ?? [];
-                $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
-                $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
-                
+                $_SESSION["householdid"] = $householdId ?? '';
+
                 if ($householdloc) {
                     $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
                     $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
                 }
-                
-                $_SESSION["area_name"] = $userData['area_name'] ?? '';
-                
-                $result = $userRepo->calculateGrade($userData['area_risks'] ?? [], $userData['house_risks'] ?? []);
-                $_SESSION["total_points"] = $result['total_points'] ?? 0;
-                $_SESSION["risk_grade"] = $result['grade'] ?? '';
+
+                $_SESSION["household_members"] = [];
+                $_SESSION["area_risks"] = [];
+                $_SESSION["house_risks"] = [];
+                $_SESSION["area_name"] = '';
+                $_SESSION["total_points"] = 0;
+                $_SESSION["risk_grade"] = '';
 
                 if ($_SESSION["usertype"] === 'admin') {
                     header("location: ../admin-module/adminhome.php?login=success");
@@ -221,10 +230,12 @@
                     exit();
                 }
             } else {
+                // New user via Google -> pass "Purok Carvic" along with their session data
                 $_SESSION["signup_google"] = [
                     "email" => $googleEmail,
                     "firstname" => $googleFirstName,
-                    "lastname" => $googleLastName
+                    "lastname" => $googleLastName,
+                    "address" => $defaultAddress
                 ];
                 header("location: ../loginreg-module/signup-google-con.php");
                 exit();
