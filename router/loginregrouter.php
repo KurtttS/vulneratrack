@@ -2,6 +2,9 @@
     require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
+    // Google OAuth Client ID, loaded from .env by bootstrap.php
+    define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '');
+
     // Signup function
     if (isset($_POST["signup_step0"])) {
 
@@ -63,6 +66,8 @@
         $userData = $signup->signupuser();
 
         if ($userData){
+            session_regenerate_id(true);
+
             $user = $userData['user'];
             $householdloc = $userData['house_location'];
 
@@ -102,16 +107,25 @@
         $logemail = $_POST["logemail"];
         $logpass  = $_POST["logpass"];
 
+        // Never allow a blank password through the normal form
+        if ($logpass === '' || $logpass === null) {
+            header("location: ../index.php?error=wronglogin");
+            exit();
+        }
+
         include __DIR__ . "/../db/database.php";
         include __DIR__ . "/../classes/loginuser.php";
         include __DIR__ . "/../processes/loginuserctrl.php";
         include __DIR__ . "/../classes/userrepository.php";
         include __DIR__ . "/../processes/repositoryctrl.php";
 
-        $loggedUser = new loginuserctrl($logemail, $logpass);
+        // Third argument false = normal password login
+        $loggedUser = new loginuserctrl($logemail, $logpass, false);
         $userData = $loggedUser->loginuser();
 
         if ($userData){
+            session_regenerate_id(true);
+
             $user = $userData['user'];
             $householdloc = $userData['house_location'];
 
@@ -156,7 +170,7 @@
     }
 
 
-    // Google Sign-In Handler
+    // Google Sign-In Handler (no password involved)
     if (isset($_POST["google_token"])) {
         $id_token = $_POST["google_token"];
 
@@ -170,148 +184,108 @@
 
         $payload = json_decode($response, true);
 
-        if (isset($payload['email'])) {
-            $googleEmail = $payload['email'];
-            $googleFirstName = $payload['given_name'] ?? '';
-            $googleLastName = $payload['family_name'] ?? '';
-            $defaultAddress = "Purok Carvic";
-
-            include_once __DIR__ . "/../db/database.php";
-            include_once __DIR__ . "/../classes/loginuser.php";
-            include_once __DIR__ . "/../processes/loginuserctrl.php";
-            include_once __DIR__ . "/../classes/userrepository.php";
-            include_once __DIR__ . "/../processes/repositoryctrl.php";
-
-            $userRepo = new repositoryctrl();
-            // checkiftaken returns false if the email already exists in the database
-            $emailExists = !$userRepo->checkiftaken($googleEmail);
-
-            if ($emailExists) {
-                // --- Existing User Login Flow ---
-                $loggedUser = new loginuserctrl($googleEmail, "");
-                $userData = $loggedUser->loginuser();
-
-                if ($userData) {
-                    $user = $userData['user'];
-                    $householdloc = $userData['house_location'] ?? [];
-
-                    $_SESSION["userid"] = $user['UserID'];
-                    $_SESSION["firstName"] = $user['First_Name'];
-                    $_SESSION["lastName"] = $user['Last_Name'];
-                    $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
-                    $_SESSION["email"] = $user['Email'];
-                    $_SESSION["usertype"] = $user['User_Type'];
-                    $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
-                    $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
-                    $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
-                    $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
-                    $_SESSION["status"] = $user['User_Status'] ?? '';
-                    $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
-                    $_SESSION["householdid"] = $user['Household_ID'] ?? '';
-                    $_SESSION["household_members"] = $userData['household_members'] ?? [];
-                    $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
-                    $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
-                    $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
-                    $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
-                    $_SESSION["area_name"] = $userData['area_name'] ?? '';
-
-                    $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
-
-                    $_SESSION["total_points"] = $result['total_points'] ?? 0;
-                    $_SESSION["risk_grade"] = $result['grade'] ?? '';
-
-                    if ($_SESSION["usertype"] === 'admin') {
-                        header("location: ../admin-module/adminhome.php?login=success");
-                        exit();
-                    } else {
-                        header("location: ../user-module/home.php?login=success");
-                        exit();
-                    }
-                }
-            } else {
-                // --- New User Auto-Registration Flow ---
-                include_once __DIR__ . "/../classes/signupuser.php";
-                include_once __DIR__ . "/../processes/signupuserctrl.php";
-
-                $plainPassword = "passsword123";
-                $dummyPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
-                
-                $userStatus = "Active";
-                $contactNum = "";
-                $birthCert = "";
-                $dateOfBirth = "2000-01-01";
-                $householdMode = "new";
-                $joinCode = "";
-                $longitude = 0.0;
-                $latitude = 0.0;
-                $areaName = $defaultAddress;
-
-                $autoSignup = new signupuserctrl(
-                    $googleFirstName,
-                    $googleLastName,
-                    $defaultAddress,
-                    $googleEmail,
-                    $dummyPassword,
-                    $dummyPassword,
-                    $dateOfBirth,
-                    $birthCert,
-                    $userStatus,
-                    $contactNum,
-                    $householdMode,
-                    $joinCode,
-                    $longitude,
-                    $latitude,
-                    $areaName
-                );
-
-                $newUserData = $autoSignup->signupuser();
-
-                if ($newUserData) {
-                    // Log them in immediately after auto-creation
-                    $loggedUser = new loginuserctrl($googleEmail, "");
-                    $userData = $loggedUser->loginuser();
-                    
-                    $user = $userData['user'];
-                    $householdloc = $userData['house_location'] ?? [];
-
-                    $_SESSION["userid"] = $user['UserID'];
-                    $_SESSION["firstName"] = $user['First_Name'];
-                    $_SESSION["lastName"] = $user['Last_Name'];
-                    $_SESSION["address"] = $defaultAddress;
-                    $_SESSION["email"] = $user['Email'];
-                    $_SESSION["usertype"] = $user['User_Type'];
-                    $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
-                    $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
-                    $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
-                    $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
-                    $_SESSION["status"] = $user['User_Status'] ?? '';
-                    $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
-                    $_SESSION["householdid"] = $user['Household_ID'] ?? '';
-                    $_SESSION["household_members"] = $userData['household_members'] ?? [];
-                    $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
-                    $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
-                    $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
-                    $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
-                    $_SESSION["area_name"] = $userData['area_name'] ?? '';
-
-                    $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
-
-                    $_SESSION["total_points"] = $result['total_points'] ?? 0;
-                    $_SESSION["risk_grade"] = $result['grade'] ?? '';
-
-                    header("location: ../user-module/home.php?signup=google_success");
-                    exit();
-                } else {
-                    header("location: ../index.php?error=googleregistrationfailed");
-                    exit();
-                }
-            }
-        } else {
+        // Token must be issued for THIS app and have a verified email
+        if (
+            !isset($payload['email']) ||
+            ($payload['aud'] ?? '') !== GOOGLE_CLIENT_ID ||
+            ($payload['email_verified'] ?? 'false') !== 'true'
+        ) {
             header("location: ../index.php?error=invalidgoogletoken");
             exit();
         }
-    }
 
+        $googleEmail = $payload['email'];
+        $googleFirstName = $payload['given_name'] ?? '';
+        $googleLastName = $payload['family_name'] ?? '';
+        $defaultAddress = "Purok Carvic";
+
+        include_once __DIR__ . "/../db/database.php";
+        include_once __DIR__ . "/../classes/loginuser.php";
+        include_once __DIR__ . "/../processes/loginuserctrl.php";
+        include_once __DIR__ . "/../classes/userrepository.php";
+        include_once __DIR__ . "/../processes/repositoryctrl.php";
+
+        $userRepo = new repositoryctrl();
+        // checkiftaken returns false if the email already exists in the database
+        $emailExists = !$userRepo->checkiftaken($googleEmail);
+
+        if (!$emailExists) {
+            // --- New User Auto-Registration Flow (no password) ---
+            include_once __DIR__ . "/../classes/signupuser.php";
+            include_once __DIR__ . "/../processes/signupuserctrl.php";
+
+            $autoSignup = new signupuserctrl(
+                $googleFirstName,
+                $googleLastName,
+                $defaultAddress,
+                $googleEmail,
+                null,           // no password
+                null,           // no confirm password
+                "2000-01-01",   // dateOfBirth placeholder
+                "",             // birthCert
+                "Active",       // userStatus
+                "",             // contactNum
+                "new",          // householdMode
+                "",             // joinCode
+                0.0,            // longitude
+                0.0,            // latitude
+                $defaultAddress // areaName
+            );
+
+            if (!$autoSignup->signupuser()) {
+                header("location: ../index.php?error=googleregistrationfailed");
+                exit();
+            }
+        }
+
+        // --- Log in (existing user, or the user just created) ---
+        // Third argument true = Google login, skip password check
+        $loggedUser = new loginuserctrl($googleEmail, null, true);
+        $userData = $loggedUser->loginuser();
+
+        if (!$userData) {
+            header("location: ../index.php?error=googleautherror");
+            exit();
+        }
+
+        session_regenerate_id(true);
+
+        $user = $userData['user'];
+        $householdloc = $userData['house_location'] ?? [];
+
+        $_SESSION["userid"] = $user['UserID'];
+        $_SESSION["firstName"] = $user['First_Name'];
+        $_SESSION["lastName"] = $user['Last_Name'];
+        $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
+        $_SESSION["email"] = $user['Email'];
+        $_SESSION["usertype"] = $user['User_Type'];
+        $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
+        $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
+        $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
+        $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
+        $_SESSION["status"] = $user['User_Status'] ?? '';
+        $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
+        $_SESSION["householdid"] = $user['Household_ID'] ?? '';
+        $_SESSION["household_members"] = $userData['household_members'] ?? [];
+        $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
+        $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
+        $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
+        $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
+        $_SESSION["area_name"] = $userData['area_name'] ?? '';
+
+        $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
+        $_SESSION["total_points"] = $result['total_points'] ?? 0;
+        $_SESSION["risk_grade"] = $result['grade'] ?? '';
+
+        if ($_SESSION["usertype"] === 'admin') {
+            header("location: ../admin-module/adminhome.php?login=success");
+        } elseif (!$emailExists) {
+            header("location: ../user-module/home.php?signup=google_success");
+        } else {
+            header("location: ../user-module/home.php?login=success");
+        }
+        exit();
+    }
 
     // Signout Function
     if (isset($_POST["signout"])) {
