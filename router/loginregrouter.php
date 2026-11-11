@@ -2,12 +2,13 @@
     require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
-    // Signup function
+    // Signup function - Step 0
     if (isset($_POST["signup_step0"])) {
 
         include __DIR__ . "/../db/database.php";
         include __DIR__ . "/../classes/userrepository.php";
         include __DIR__ . "/../processes/repositoryctrl.php";
+        
         // Store data
         $_SESSION["signup"] = [
             "email" => $_POST["email"],
@@ -32,6 +33,7 @@
         exit();
     }
 
+    // Signup function - Step 1
     if (isset($_POST["signup_step1"]) && isset($_SESSION["signup"])) {
 
         $firstname = $_POST["firstname"];
@@ -167,7 +169,7 @@
     }
 
 
-    // Google Sign-In Handler (email only, no other validation)
+    // Google Sign-In Handler (Passwordless / Gmail only)
     if (isset($_POST["google_token"])) {
 
         // Ask Google to decode the token so the email comes from a signed source
@@ -196,7 +198,7 @@
         // checkiftaken returns false if the email already exists in the database
         $emailExists = !$userRepo->checkiftaken($googleEmail);
 
-        // New email -> create the account automatically
+        // New email -> create the account automatically without passwords
         if (!$emailExists) {
             include_once __DIR__ . "/../classes/signupuser.php";
             include_once __DIR__ . "/../processes/signupuserctrl.php";
@@ -206,8 +208,8 @@
                 $googleLastName,
                 $defaultAddress,
                 $googleEmail,
-                null,           // no password
-                null,           // no confirm password
+                null,           // No password needed
+                null,           // No confirm password needed
                 "2000-01-01",   // dateOfBirth placeholder
                 "",             // birthCert
                 "Active",       // userStatus
@@ -221,7 +223,7 @@
             $autoSignup->signupuser();
         }
 
-        // Log in without a password (third argument true = Google login)
+        // Log in without a password (third argument true = Google / passwordless login)
         $loggedUser = new loginuserctrl($googleEmail, null, true);
         $userData = $loggedUser->loginuser();
 
@@ -252,7 +254,7 @@
         $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
         $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
         $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
-        $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
+        $_SESSION["longitude"]  = $householdloc['CoordinateY'] ?? '';
         $_SESSION["area_name"] = $userData['area_name'] ?? '';
 
         $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
@@ -263,6 +265,7 @@
         header("location: ../user-module/home.php?login=success");
         exit();
     }
+
 
     // Signout Function
     if (isset($_POST["signout"])) {
