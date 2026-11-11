@@ -174,7 +174,7 @@
     if (isset($_POST["google_token"])) {
 
         // Adjust this path to wherever you saved googleauth.php
-        include_once __DIR__ . "/../classes/googleauth.php";
+        include_once __DIR__ . "/../classes/google.php";
 
         $defaultAddress = "Purok Carvic";
 
