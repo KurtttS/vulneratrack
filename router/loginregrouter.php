@@ -2,9 +2,6 @@
     require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
-    // Google OAuth Client ID, loaded from .env by bootstrap.php
-    define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '');
-
     // Signup function
     if (isset($_POST["signup_step0"])) {
 
@@ -101,15 +98,21 @@
     }
 
 
-    // Login Function
+    // Login Function with server-side safety checks (bypasses HTML required attributes)
     if (isset($_POST["login"])) {
 
-        $logemail = $_POST["logemail"];
-        $logpass  = $_POST["logpass"];
+        $logemail = trim($_POST["logemail"] ?? '');
+        $logpass  = $_POST["logpass"] ?? '';
 
-        // Never allow a blank password through the normal form
-        if ($logpass === '' || $logpass === null) {
-            header("location: ../index.php?error=wronglogin");
+        // Validate that fields are not empty server-side
+        if ($logemail === '' || $logpass === null || $logpass === '') {
+            header("location: ../index.php?error=emptyfields");
+            exit();
+        }
+
+        // Optional format check for email
+        if (!filter_var($logemail, FILTER_VALIDATE_EMAIL)) {
+            header("location: ../index.php?error=invalidemail");
             exit();
         }
 
@@ -148,6 +151,7 @@
             $_SESSION["latitude"] = $householdloc['CoordinateX'];
             $_SESSION["longitude"]  = $householdloc['CoordinateY'];
             $_SESSION["area_name"] = $userData['area_name'];
+            
             $userRepo = new repositoryctrl();
             $result = $userRepo->calculateGrade($userData['area_risks'], $userData['house_risks']);
 
@@ -169,64 +173,6 @@
         }
     }
 
-
-// Google Sign-In Handler (Passwordless / Gmail only)
-    if (isset($_POST["google_token"])) {
-
-        // Adjust this path to wherever you saved googleauth.php
-        include_once __DIR__ . "/../classes/google.php";
-
-        $defaultAddress = "Purok Carvic";
-
-        // All token verification (aud, iss, email_verified), auto-signup and
-        // passwordless login happen inside the class.
-        $googleAuth = new GoogleAuth();
-        $result = $googleAuth->handleGoogleLogin($_POST["google_token"]);
-
-        if (isset($result["error"])) {
-            header("location: ../index.php?error=" . urlencode($result["error"]));
-            exit();
-        }
-
-        $userData = $result["data"];
-
-        // The class has already included these files
-        $userRepo = new repositoryctrl();
-
-        session_regenerate_id(true);
-
-        $user = $userData['user'];
-        $householdloc = $userData['house_location'] ?? [];
-
-        $_SESSION["userid"] = $user['UserID'];
-        $_SESSION["firstName"] = $user['First_Name'];
-        $_SESSION["lastName"] = $user['Last_Name'];
-        $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
-        $_SESSION["email"] = $user['Email'];
-        $_SESSION["usertype"] = $user['User_Type'];
-        $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
-        $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
-        $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
-        $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
-        $_SESSION["status"] = $user['User_Status'] ?? '';
-        $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
-        $_SESSION["householdid"] = $user['Household_ID'] ?? '';
-        $_SESSION["household_members"] = $userData['household_members'] ?? [];
-        $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
-        $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
-        $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
-        $_SESSION["longitude"]  = $householdloc['CoordinateY'] ?? '';
-        $_SESSION["area_name"] = $userData['area_name'] ?? '';
-
-        $grade = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
-        $_SESSION["total_points"] = $grade['total_points'] ?? 0;
-        $_SESSION["risk_grade"] = $grade['grade'] ?? '';
-
-        // Always go to home
-        header("location: ../user-module/home.php?login=success");
-        exit();
-    }
-
     // Signout Function
     if (isset($_POST["signout"])) {
         session_unset();
@@ -234,4 +180,5 @@
         header("location: ../index.php?signout=success");
         exit();
     }
+
 ?>
