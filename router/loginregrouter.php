@@ -2,13 +2,15 @@
     require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
-    // Signup function - Step 0
+    // Google OAuth Client ID, loaded from .env by bootstrap.php
+    define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '');
+
+    // Signup function
     if (isset($_POST["signup_step0"])) {
 
         include __DIR__ . "/../db/database.php";
         include __DIR__ . "/../classes/userrepository.php";
         include __DIR__ . "/../processes/repositoryctrl.php";
-        
         // Store data
         $_SESSION["signup"] = [
             "email" => $_POST["email"],
@@ -33,7 +35,6 @@
         exit();
     }
 
-    // Signup function - Step 1
     if (isset($_POST["signup_step1"]) && isset($_SESSION["signup"])) {
 
         $firstname = $_POST["firstname"];
@@ -94,7 +95,7 @@
             $_SESSION["latitude"] = $householdloc['CoordinateX'];
             $_SESSION["longitude"]   = $householdloc['CoordinateY'];
         }
-
+            
         header("location: ../user-module/home.php?signup=success");
         exit();
     }
@@ -153,15 +154,15 @@
             $_SESSION["total_points"] = $result['total_points'];
             $_SESSION["risk_grade"]   = $result['grade'];
 
-            if($_SESSION["usertype"]==='user') {
+                if($_SESSION["usertype"]==='user') {
                 header("location: ../user-module/home.php?login=success");
                 exit();
+                }
+                else if ($_SESSION["usertype"]==='admin') {
+                    header("location: ../admin-module/adminhome.php?login=success");
+                    exit();
+                } 
             }
-            else if ($_SESSION["usertype"]==='admin') {
-                header("location: ../admin-module/adminhome.php?login=success");
-                exit();
-            }
-        }
         else {
             header("location: ../index.php?error=wronglogin");
             exit();
@@ -169,68 +170,28 @@
     }
 
 
-    // Google Sign-In Handler (Passwordless / Gmail only)
+// Google Sign-In Handler (Passwordless / Gmail only)
     if (isset($_POST["google_token"])) {
 
-        // Ask Google to decode the token so the email comes from a signed source
-        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . urlencode($_POST["google_token"]);
-        $response = @file_get_contents($url);
-        $payload = $response ? json_decode($response, true) : [];
+        // Adjust this path to wherever you saved googleauth.php
+        include_once __DIR__ . "/../classes/googleauth.php";
 
-        // The only check: is there an email?
-        if (empty($payload['email'])) {
-            header("location: ../index.php?error=googleautherror");
+        $defaultAddress = "Purok Carvic";
+
+        // All token verification (aud, iss, email_verified), auto-signup and
+        // passwordless login happen inside the class.
+        $googleAuth = new GoogleAuth();
+        $result = $googleAuth->handleGoogleLogin($_POST["google_token"]);
+
+        if (isset($result["error"])) {
+            header("location: ../index.php?error=" . urlencode($result["error"]));
             exit();
         }
 
-        $googleEmail     = $payload['email'];
-        $googleFirstName = $payload['given_name'] ?? '';
-        $googleLastName  = $payload['family_name'] ?? '';
-        $defaultAddress  = "Purok Carvic";
+        $userData = $result["data"];
 
-        include_once __DIR__ . "/../db/database.php";
-        include_once __DIR__ . "/../classes/loginuser.php";
-        include_once __DIR__ . "/../processes/loginuserctrl.php";
-        include_once __DIR__ . "/../classes/userrepository.php";
-        include_once __DIR__ . "/../processes/repositoryctrl.php";
-
+        // The class has already included these files
         $userRepo = new repositoryctrl();
-        // checkiftaken returns false if the email already exists in the database
-        $emailExists = !$userRepo->checkiftaken($googleEmail);
-
-        // New email -> create the account automatically without passwords
-        if (!$emailExists) {
-            include_once __DIR__ . "/../classes/signupuser.php";
-            include_once __DIR__ . "/../processes/signupuserctrl.php";
-
-            $autoSignup = new signupuserctrl(
-                $googleFirstName,
-                $googleLastName,
-                $defaultAddress,
-                $googleEmail,
-                null,           // No password needed
-                null,           // No confirm password needed
-                "2000-01-01",   // dateOfBirth placeholder
-                "",             // birthCert
-                "Active",       // userStatus
-                "",             // contactNum
-                "new",          // householdMode
-                "",             // joinCode
-                0.0,            // longitude
-                0.0,            // latitude
-                $defaultAddress // areaName
-            );
-            $autoSignup->signupuser();
-        }
-
-        // Log in without a password (third argument true = Google / passwordless login)
-        $loggedUser = new loginuserctrl($googleEmail, null, true);
-        $userData = $loggedUser->loginuser();
-
-        if (!$userData) {
-            header("location: ../index.php?error=googleautherror");
-            exit();
-        }
 
         session_regenerate_id(true);
 
@@ -257,15 +218,14 @@
         $_SESSION["longitude"]  = $householdloc['CoordinateY'] ?? '';
         $_SESSION["area_name"] = $userData['area_name'] ?? '';
 
-        $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
-        $_SESSION["total_points"] = $result['total_points'] ?? 0;
-        $_SESSION["risk_grade"] = $result['grade'] ?? '';
+        $grade = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
+        $_SESSION["total_points"] = $grade['total_points'] ?? 0;
+        $_SESSION["risk_grade"] = $grade['grade'] ?? '';
 
         // Always go to home
         header("location: ../user-module/home.php?login=success");
         exit();
     }
-
 
     // Signout Function
     if (isset($_POST["signout"])) {
