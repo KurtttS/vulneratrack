@@ -43,12 +43,12 @@ session_start();
                 <button type="submit" name="login" class="btn login">Log In</button>
             </form>
 
-            <div id="g_id_onload"
-                 data-client_id="712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com"
-                 data-context="signin"
-                 data-ux_mode="popup"
-                 data-callback="handleGoogleLogin"
-                 data-auto_prompt="false">
+           <div id="g_id_onload"
+                data-client_id=""
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleGoogleLogin"
+                data-auto_prompt="false">
             </div>
 
             <div class="g_id_signin"
@@ -79,6 +79,10 @@ session_start();
     <footer class="logfoot">Copyright © 2026 Vulneratrack All Rights Reserved</footer>
     
     <script src="js/index.js"></script>
+
+    <script>
+        document.getElementById('g_id_onload').setAttribute('data-client_id', import.meta.env.VITE_GOOGLE_CLIENT_ID);
+    </script>
 
 </body>
 </html>
