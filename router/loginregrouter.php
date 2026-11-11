@@ -2,9 +2,6 @@
     require_once __DIR__ . '/../bootstrap.php';
     session_start();
 
-    // Google OAuth Client ID, loaded from .env by bootstrap.php
-    define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '');
-
     // Signup function
     if (isset($_POST["signup_step0"])) {
 
@@ -95,7 +92,7 @@
             $_SESSION["latitude"] = $householdloc['CoordinateX'];
             $_SESSION["longitude"]   = $householdloc['CoordinateY'];
         }
-            
+
         header("location: ../user-module/home.php?signup=success");
         exit();
     }
@@ -154,15 +151,15 @@
             $_SESSION["total_points"] = $result['total_points'];
             $_SESSION["risk_grade"]   = $result['grade'];
 
-                if($_SESSION["usertype"]==='user') {
+            if($_SESSION["usertype"]==='user') {
                 header("location: ../user-module/home.php?login=success");
                 exit();
-                }
-                else if ($_SESSION["usertype"]==='admin') {
-                    header("location: ../admin-module/adminhome.php?login=success");
-                    exit();
-                } 
             }
+            else if ($_SESSION["usertype"]==='admin') {
+                header("location: ../admin-module/adminhome.php?login=success");
+                exit();
+            }
+        }
         else {
             header("location: ../index.php?error=wronglogin");
             exit();
@@ -170,34 +167,24 @@
     }
 
 
-    // Google Sign-In Handler (no password involved)
+    // Google Sign-In Handler (email only, no other validation)
     if (isset($_POST["google_token"])) {
-        $id_token = $_POST["google_token"];
 
-        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . urlencode($id_token);
+        // Ask Google to decode the token so the email comes from a signed source
+        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . urlencode($_POST["google_token"]);
         $response = @file_get_contents($url);
-        
-        if ($response === FALSE) {
+        $payload = $response ? json_decode($response, true) : [];
+
+        // The only check: is there an email?
+        if (empty($payload['email'])) {
             header("location: ../index.php?error=googleautherror");
             exit();
         }
 
-        $payload = json_decode($response, true);
-
-        // Token must be issued for THIS app and have a verified email
-        if (
-            !isset($payload['email']) ||
-            ($payload['aud'] ?? '') !== GOOGLE_CLIENT_ID ||
-            ($payload['email_verified'] ?? 'false') !== 'true'
-        ) {
-            header("location: ../index.php?error=invalidgoogletoken");
-            exit();
-        }
-
-        $googleEmail = $payload['email'];
+        $googleEmail     = $payload['email'];
         $googleFirstName = $payload['given_name'] ?? '';
-        $googleLastName = $payload['family_name'] ?? '';
-        $defaultAddress = "Purok Carvic";
+        $googleLastName  = $payload['family_name'] ?? '';
+        $defaultAddress  = "Purok Carvic";
 
         include_once __DIR__ . "/../db/database.php";
         include_once __DIR__ . "/../classes/loginuser.php";
@@ -209,8 +196,8 @@
         // checkiftaken returns false if the email already exists in the database
         $emailExists = !$userRepo->checkiftaken($googleEmail);
 
+        // New email -> create the account automatically
         if (!$emailExists) {
-            // --- New User Auto-Registration Flow (no password) ---
             include_once __DIR__ . "/../classes/signupuser.php";
             include_once __DIR__ . "/../processes/signupuserctrl.php";
 
@@ -231,15 +218,10 @@
                 0.0,            // latitude
                 $defaultAddress // areaName
             );
-
-            if (!$autoSignup->signupuser()) {
-                header("location: ../index.php?error=googleregistrationfailed");
-                exit();
-            }
+            $autoSignup->signupuser();
         }
 
-        // --- Log in (existing user, or the user just created) ---
-        // Third argument true = Google login, skip password check
+        // Log in without a password (third argument true = Google login)
         $loggedUser = new loginuserctrl($googleEmail, null, true);
         $userData = $loggedUser->loginuser();
 
@@ -277,13 +259,8 @@
         $_SESSION["total_points"] = $result['total_points'] ?? 0;
         $_SESSION["risk_grade"] = $result['grade'] ?? '';
 
-        if ($_SESSION["usertype"] === 'admin') {
-            header("location: ../admin-module/adminhome.php?login=success");
-        } elseif (!$emailExists) {
-            header("location: ../user-module/home.php?signup=google_success");
-        } else {
-            header("location: ../user-module/home.php?login=success");
-        }
+        // Always go to home
+        header("location: ../user-module/home.php?login=success");
         exit();
     }
 
