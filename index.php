@@ -16,6 +16,7 @@ session_start();
     <link rel="stylesheet" href="style/userstyle/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -36,29 +37,48 @@ session_start();
             <form class="login-form" id="mainForm" action="router/loginregrouter.php" method="post">
                 <input type="email" name="logemail" placeholder="Email" required>
                 <div class="password-wrapper">
-    <input type="password" name="logpass" id="logpass" placeholder="Password" required>
-    <i class="fa-solid fa-eye" id="togglePassword"></i>
-</div>
-
+                    <input type="password" name="logpass" id="logpass" placeholder="Password" required>
+                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                </div>
                 <button type="submit" name="login" class="btn login">Log In</button>
             </form>
+
+            <div id="g_id_onload"
+                 data-client_id="712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com"
+                 data-context="signin"
+                 data-ux_mode="popup"
+                 data-callback="handleGoogleLogin"
+                 data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                 style="margin-top: 10px; display: flex; justify-content: center;"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="outline"
+                 data-text="signin_with"
+                 data-size="large"
+                 data-logo_alignment="left">
+            </div>
+
             <p class="login-text">
                 New account?<a href="loginreg-module/signup.php"> Sign up</a> Here.
             </p>
         </div>
     </div>
 
-      <div id="errorModal" class="modal-overlay">
-      <div class="modal-content">
-          <i class="fas fa-exclamation-circle" id="modalIcon"></i>
-          <h3 id="modalTitle">Notice</h3>
-          <p id="modalMessage">Please fill in all required textboxes before proceeding.</p>
-          <button type="button" onclick="closeModal()" class="btn login" style="width: 100%;">Understood</button>
-      </div>
-  </div>
+    <div id="errorModal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-circle" id="modalIcon"></i>
+            <h3 id="modalTitle">Notice</h3>
+            <p id="modalMessage">Please fill in all required textboxes before proceeding.</p>
+            <button type="button" onclick="closeModal()" class="btn login" style="width: 100%;">Understood</button>
+        </div>
+    </div>
 
-  <footer class = "logfoot"> Copyright © 2026 Vulneratrack All Rights Reserved </footer>
-    <script src="js/index.js"></script>
+    <footer class="logfoot">Copyright © 2026 Vulneratrack All Rights Reserved</footer>
     
+    <script src="js/index.js"></script>
+
 </body>
 </html>

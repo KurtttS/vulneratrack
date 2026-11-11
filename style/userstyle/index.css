@@ -34,7 +34,7 @@
 @media (min-width: 769px) {
     .right {
         flex: 1;
-        background-image: linear-gradient(#303870, #5c6bd6); 
+        background-image: linear-gradient(#303870, #5c6bd6);
         padding: 40px;
         width: auto;
         max-width: none;
@@ -44,8 +44,8 @@
     }
 
     .right h2 {
-    color: white;
-    font-size: 50px;
+        color: white;
+        font-size: 50px;
     }
 
     .right p {
@@ -56,14 +56,14 @@
     /*nav*/
     .back-btn {
         position: absolute;
-        top: 100px; 
+        top: 100px;
         left: 25px;
         font-size: 28px;
-        color: #ffffff; 
+        color: #ffffff;
         text-decoration: none;
         font-weight: bold;
         transition: transform 0.2s, color 0.2s;
-        z-index: 1001; 
+        z-index: 1001;
     }
 
     .back-btn:hover {
@@ -102,7 +102,7 @@
         background-color: #168f81;
         color: #000000;
     }
-    
+
     /*txt*/
     p.login-text {
         margin-top: 15px;
@@ -113,37 +113,36 @@
 
     .login-text a {
         text-decoration: none;
-        color: #ffa3a3; 
+        color: #ffa3a3;
         margin-left: 5px;
         transition: color 0.3s;
     }
 
     .login-text a:hover {
-        color: #ff6868; 
+        color: #ff6868;
     }
 
- 
-
 }
+
 /*end*/
-.back-btn{
+.back-btn {
     position: absolute;
     top: 25px;
-    left: 25px;      /* ← left side of the gradient */
+    left: 25px;
+    /* ← left side of the gradient */
     font-size: 28px;
     color: #ffffff;
     z-index: 1001;
     text-decoration: none;
 }
 
-.back-btn:hover{
+.back-btn:hover {
     transform: scale(1.2);
     color: #5c6bd6;
 }
 
-
 .right {
-        position: relative;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -152,7 +151,8 @@
 }
 
 /*forms*/
-.login-form, .signupstart-form {
+.login-form,
+.signupstart-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -160,7 +160,7 @@
     margin-top: 20px;
 }
 
-.login-form input, 
+.login-form input,
 .signupstart-form input {
     width: 400px;
     padding: 15px;
@@ -172,24 +172,28 @@
 }
 
 /* show password – match normal input layout */
-.login-form .password-wrapper{
+.login-form .password-wrapper {
     position: relative;
-    width: 400px;          /* same as normal inputs */
-    margin: 15px 0;       /* same spacing */
+    width: 400px;
+    /* same as normal inputs */
+    margin: 15px 0;
+    /* same spacing */
 }
 
-.login-form .password-wrapper input{
+.login-form .password-wrapper input {
     width: 100%;
     padding: 15px;
-    padding-right: 40px;  /* space for the eye icon */
+    padding-right: 40px;
+    /* space for the eye icon */
     border: 1px solid #000000;
     border-radius: 10px;
     font-size: 16px;
     outline: none;
-    margin: 0;            /* important: wrapper now controls margin */
+    margin: 0;
+    /* important: wrapper now controls margin */
 }
 
-.login-form .password-wrapper i{
+.login-form .password-wrapper i {
     position: absolute;
     right: 12px;
     top: 50%;
@@ -206,7 +210,7 @@
     margin-top: 20px;
 }
 
-.member-form input{
+.member-form input {
     width: 150px;
     padding: 15px;
     margin: 15px 0;
@@ -216,25 +220,27 @@
     outline: none;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border: 3px solid #5c6bd6 !important;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border: 3px solid #5c6bd6 !important;
 }
 
 /*signup*/
 .signup-form {
     display: grid;
-    grid-template-columns: 240px 240px; 
-    gap: 30px; 
+    grid-template-columns: 240px 240px;
+    gap: 30px;
     margin-top: 25px;
 }
 
 .signup-form .area {
     grid-column: span 2;
-      
+
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -242,27 +248,28 @@ input:focus, select:focus {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23444'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position: right 22px center; 
+    background-position: right 22px center;
 }
 
 .num {
-    grid-column: span 2; /* makes it take full width */
+    grid-column: span 2;
+    /* makes it take full width */
     width: 100%;
 }
 
-.signup-form input, 
+.signup-form input,
 .signup-form select {
-    width: 100%; 
+    width: 100%;
     padding: 15px;
     border-radius: 10px;
     font-size: 15px;
     background-color: white;
     border: none;
-      
+
 }
 
 
-  .signup-form select{
+.signup-form select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -270,33 +277,34 @@ input:focus, select:focus {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23444'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position: right 22px center; 
-  }
+    background-position: right 22px center;
+}
+
 .signup-form .btn.login {
-    grid-column: span 2; 
-    width: 140px; 
+    grid-column: span 2;
+    width: 140px;
     height: 45px;
-    margin: 20px auto 0 auto; 
+    margin: 20px auto 0 auto;
     font-size: 14px;
 }
 
 .btn.sign {
-    grid-column: span 2; 
-    width: 150px; 
+    grid-column: span 2;
+    width: 150px;
     height: 45px;
-    margin: 20px auto 0 auto; 
+    margin: 20px auto 0 auto;
     font-size: 14px;
     font-weight: bold;
 }
 
 /* show password – SIGNUP form */
-.signupstart-form .password-wrapper{
+.signupstart-form .password-wrapper {
     position: relative;
     width: 400px;
     margin: 15px 0;
 }
 
-.signupstart-form .password-wrapper input{
+.signupstart-form .password-wrapper input {
     width: 100%;
     padding: 15px;
     padding-right: 40px;
@@ -307,7 +315,7 @@ input:focus, select:focus {
     margin: 0;
 }
 
-.signupstart-form .password-wrapper i{
+.signupstart-form .password-wrapper i {
     position: absolute;
     right: 12px;
     top: 50%;
@@ -330,13 +338,13 @@ input:focus, select:focus {
 
 .file-label {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     padding: 12px 18px;
     background-color: white;
     border-radius: 10px;
-    color: #757575; 
+    color: #757575;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -354,17 +362,17 @@ input:focus, select:focus {
 }
 
 /*join or create*/
-.household-choice{
+.household-choice {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
 }
 
-.choice-row{
-     display: flex;
-    justify-content: center;  
+.choice-row {
+    display: flex;
+    justify-content: center;
     align-items: center;
     gap: 5px;
     color: white;
@@ -376,8 +384,8 @@ input:focus, select:focus {
     width: 40px;
 }
 
-.choice-row label{
- 
+.choice-row label {
+
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -387,7 +395,7 @@ input:focus, select:focus {
 
 
 /* dropdown container */
-.join-dropdown{
+.join-dropdown {
     width: 100%;
     max-width: 400px;
 
@@ -397,18 +405,18 @@ input:focus, select:focus {
     transform: translateY(-8px);
 
     transition: max-height 0.35s ease,
-                opacity 0.25s ease,
-                transform 0.25s ease;
+        opacity 0.25s ease,
+        transform 0.25s ease;
 }
 
 /* active */
-.join-dropdown.show{
+.join-dropdown.show {
     max-height: 90px;
     opacity: 1;
     transform: translateY(0);
 }
 
-.join-dropdown input{
+.join-dropdown input {
     width: 100%;
     margin-top: 12px;
 }
@@ -419,7 +427,7 @@ input:focus, select:focus {
     width: 100%;
     z-index: 1000;
     background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     margin-top: 5px;
     padding: 10px;
@@ -436,32 +444,49 @@ input:focus, select:focus {
 }
 
 /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none; 
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .modal-content {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .modal-content i { color: #0F0B5D; font-size: 3rem; margin-bottom: 1rem; }
-        .modal-content h3 { margin-bottom: 0.5rem; color: #333; }
-        .modal-content p { color: #666; margin-bottom: 1.5rem; }
-
-
-    @media (max-width: 768px) {
-
-body{
-     background: linear-gradient(white, #ffffff, #ffffff, #06045d); 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content i {
+    color: #0F0B5D;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.modal-content h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+
+@media (max-width: 768px) {
+
+    body {
+        background: linear-gradient(white, #ffffff, #ffffff, #06045d);
     }
+}
