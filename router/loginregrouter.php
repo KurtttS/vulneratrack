@@ -182,49 +182,54 @@
             include_once __DIR__ . "/../classes/userrepository.php";
             include_once __DIR__ . "/../processes/repositoryctrl.php";
 
-            // Try logging in existing user
-            $loggedUser = new loginuserctrl($googleEmail, "");
-            $userData = $loggedUser->loginuser();
+            $userRepo = new repositoryctrl();
+            // checkiftaken returns false if the email already exists in the database
+            $emailExists = !$userRepo->checkiftaken($googleEmail);
 
-            if ($userData) {
+            if ($emailExists) {
                 // --- Existing User Login Flow ---
-                $user = $userData['user'];
-                $householdloc = $userData['house_location'] ?? [];
+                $loggedUser = new loginuserctrl($googleEmail, "");
+                $userData = $loggedUser->loginuser();
 
-                $_SESSION["userid"] = $user['UserID'];
-                $_SESSION["firstName"] = $user['First_Name'];
-                $_SESSION["lastName"] = $user['Last_Name'];
-                $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
-                $_SESSION["email"] = $user['Email'];
-                $_SESSION["usertype"] = $user['User_Type'];
-                $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
-                $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
-                $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
-                $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
-                $_SESSION["status"] = $user['User_Status'] ?? '';
-                $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
-                $_SESSION["householdid"] = $user['Household_ID'] ?? '';
-                $_SESSION["household_members"] = $userData['household_members'] ?? [];
-                $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
-                $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
-                $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
-                $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
-                $_SESSION["area_name"] = $userData['area_name'] ?? '';
+                if ($userData) {
+                    $user = $userData['user'];
+                    $householdloc = $userData['house_location'] ?? [];
 
-                $userRepo = new repositoryctrl();
-                $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
+                    $_SESSION["userid"] = $user['UserID'];
+                    $_SESSION["firstName"] = $user['First_Name'];
+                    $_SESSION["lastName"] = $user['Last_Name'];
+                    $_SESSION["address"] = !empty($user['Address']) ? $user['Address'] : $defaultAddress;
+                    $_SESSION["email"] = $user['Email'];
+                    $_SESSION["usertype"] = $user['User_Type'];
+                    $_SESSION["datecreated"] = $user['Date_Created'] ?? '';
+                    $_SESSION["dateupdated"] = $user['Date_Updated'] ?? '';
+                    $_SESSION["dateofbirth"] = $user['Date_of_Birth'] ?? '';
+                    $_SESSION["birthcert"] = $user['Birth_Certificate'] ?? '';
+                    $_SESSION["status"] = $user['User_Status'] ?? '';
+                    $_SESSION["contactnum"] = $user['Contact_Number'] ?? '';
+                    $_SESSION["householdid"] = $user['Household_ID'] ?? '';
+                    $_SESSION["household_members"] = $userData['household_members'] ?? [];
+                    $_SESSION["area_risks"] = $userData['area_risks'] ?? [];
+                    $_SESSION["house_risks"] = $userData['house_risks'] ?? [];
+                    $_SESSION["latitude"] = $householdloc['CoordinateX'] ?? '';
+                    $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
+                    $_SESSION["area_name"] = $userData['area_name'] ?? '';
 
-                $_SESSION["total_points"] = $result['total_points'] ?? 0;
-                $_SESSION["risk_grade"] = $result['grade'] ?? '';
+                    $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
 
-                if ($_SESSION["usertype"] === 'admin') {
-                    header("location: ../admin-module/adminhome.php?login=success");
-                    exit();
-                } else {
-                    header("location: ../user-module/home.php?login=success");
-                    exit();
+                    $_SESSION["total_points"] = $result['total_points'] ?? 0;
+                    $_SESSION["risk_grade"] = $result['grade'] ?? '';
+
+                    if ($_SESSION["usertype"] === 'admin') {
+                        header("location: ../admin-module/adminhome.php?login=success");
+                        exit();
+                    } else {
+                        header("location: ../user-module/home.php?login=success");
+                        exit();
+                    }
                 }
             } else {
+                // --- New User Auto-Registration Flow ---
                 include_once __DIR__ . "/../classes/signupuser.php";
                 include_once __DIR__ . "/../processes/signupuserctrl.php";
 
@@ -289,7 +294,6 @@
                     $_SESSION["longitude"] = $householdloc['CoordinateY'] ?? '';
                     $_SESSION["area_name"] = $userData['area_name'] ?? '';
 
-                    $userRepo = new repositoryctrl();
                     $result = $userRepo->calculateGrade($_SESSION["area_risks"], $_SESSION["house_risks"]);
 
                     $_SESSION["total_points"] = $result['total_points'] ?? 0;
