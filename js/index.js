@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         modalTitle.innerText = "Login Failed";
         if (errorType === 'wrongpassword') {
             modalMessage.innerText = "The password you entered is incorrect. Please try again.";
+        } else if (errorType === 'googlelogin') {
+            modalMessage.innerText = "Google sign-in failed. Use a Google account linked to an existing account and try again.";
         } else {
             modalMessage.innerText = "The email or password you entered is incorrect. Please try again.";
         }
