@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
 session_start();
+$googleClientId = appEnvironment(
+    'GOOGLE_CLIENT_ID',
+    '712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com'
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +48,7 @@ session_start();
             </form>
 
             <div id="g_id_onload"
-                 data-client_id="712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com"
+                 data-client_id="<?= htmlspecialchars($googleClientId, ENT_QUOTES, 'UTF-8') ?>"
                  data-context="signin"
                  data-ux_mode="popup"
                  data-callback="handleGoogleLogin"
@@ -54,7 +58,7 @@ session_start();
             <div class="g_id_signin"
                  style="margin-top: 10px; display: flex; justify-content: center;"
                  data-type="standard"
-                 data-shape="rectangular"
+                 data-shape="pill"
                  data-theme="outline"
                  data-text="signin_with"
                  data-size="large"
