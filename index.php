@@ -61,7 +61,6 @@ $googleClientId = appEnvironment(
                  data-shape="pill"
                  data-theme="outline"
                  data-text="signin_with"
-                 data-size="large"
                  data-logo_alignment="left">
             </div>
 
