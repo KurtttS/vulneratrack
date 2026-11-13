@@ -1,16 +1,5 @@
 {
-    "name": "asus/vulneratrack",
-    "description": "composer install",
-    "autoload": {
-        "psr-4": {
-            "Asus\\Vulneratrack\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Gail Flores",
-            "email": "gailflores1121@gmail.com"
-        }
-    ],
-    "require": {}
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
 }

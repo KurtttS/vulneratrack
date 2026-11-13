@@ -1,3 +1,6 @@
+-- Legacy MariaDB/MySQL export; do not import into Supabase/PostgreSQL.
+-- Use db/supabase_schema.sql for the PostgreSQL application schema.
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.3
 -- https://www.phpmyadmin.net/

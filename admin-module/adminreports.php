@@ -1,9 +1,14 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
+appStartSession();
+appRequireAuthenticatedUser();
 include __DIR__ . '/../db/database.php';
 include __DIR__ . '/../classes/reportingclass.php';
 include __DIR__ . '/../processes/adminreportfetchctrl.php';
+require_once __DIR__ . '/../classes/supabasestorage.php';
 
 $fetch = new adminreportfetchctrl();
+$storage = new SupabaseStorage();
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $page = max(1, $page);
@@ -99,9 +104,10 @@ $total_pages = ceil($total_reports / $limit);
 
             <td>
                 <?php if ($firstImage): ?>
+                    <?php $imageUrl = $storage->createSignedUrl($firstImage); ?>
                     <i class="far fa-file-alt btn-download"
                        style="cursor:pointer"
-                       onclick="event.stopPropagation(); openImageModal('<?= $firstImage ?>')"></i>
+                       onclick="event.stopPropagation(); openImageModal('<?= htmlspecialchars($imageUrl, ENT_QUOTES) ?>')"></i>
                 <?php else: ?>
                     No Image
                 <?php endif; ?>

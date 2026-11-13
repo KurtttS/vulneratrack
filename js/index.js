@@ -1,11 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const modal = document.getElementById('errorModal');
     const modalMessage = document.getElementById('modalMessage');
     const modalTitle = document.getElementById('modalTitle');
     const loginForm = document.getElementById('mainForm');
 
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', function (e) {
             const email = document.getElementsByName('logemail')[0].value.trim();
             const pass = document.getElementsByName('logpass')[0].value.trim();
 
@@ -21,14 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('error')) {
         const errorType = urlParams.get('error');
-        
+
         modalTitle.innerText = "Login Failed";
         if (errorType === 'wrongpassword') {
             modalMessage.innerText = "The password you entered is incorrect. Please try again.";
+        } else if (errorType === 'googlelogin') {
+            modalMessage.innerText = "Google sign-in failed. Use a Google account linked to an existing account and try again.";
         } else {
             modalMessage.innerText = "The email or password you entered is incorrect. Please try again.";
         }
-        
+
         modal.style.display = 'flex';
     }
 });
@@ -40,8 +42,6 @@ function closeModal() {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 }
-
-
 
 //PASSWORD
 const togglePassword = document.getElementById("togglePassword");
@@ -59,4 +59,20 @@ if (togglePassword && passwordInput) {
         this.classList.toggle("fa-eye");
         this.classList.toggle("fa-eye-slash");
     });
+}
+
+//google
+function handleGoogleLogin(response) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'router/loginregrouter.php';
+
+    const tokenInput = document.createElement('input');
+    tokenInput.type = 'hidden';
+    tokenInput.name = 'google_token';
+    tokenInput.value = response.credential;
+
+    form.appendChild(tokenInput);
+    document.body.appendChild(form);
+    form.submit();
 }

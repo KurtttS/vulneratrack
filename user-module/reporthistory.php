@@ -48,7 +48,7 @@
         <?php if ($fileCount > 0): ?>
         <div class="report-images">
             <?php foreach ($files as $img): ?>
-                <img src="../uploads/reports/<?= htmlspecialchars($img) ?>" alt="">
+                <img src="<?= htmlspecialchars((new SupabaseStorage())->createSignedUrl($img), ENT_QUOTES) ?>" alt="">
             <?php endforeach; ?>
         </div>
         <?php endif; ?>

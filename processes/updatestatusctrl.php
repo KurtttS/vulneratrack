@@ -28,21 +28,21 @@ $conn = $db->conn();
 
 if ($status === 'resolved') {
 
-    $stmt = $conn->prepare("
+    $stmt = $conn->prepare('
         UPDATE report
-        SET report_status = ?, Date_Resolved = CURDATE()
-        WHERE ReportID = ?
-    ");
+        SET "report_status" = ?, "Date_Resolved" = CURRENT_DATE
+        WHERE "ReportID" = ?
+    ');
 
     $stmt->execute([$status, $reportId]);
 
 } else {
 
-    $stmt = $conn->prepare("
+    $stmt = $conn->prepare('
         UPDATE report
-        SET report_status = ?, Date_Resolved = NULL
-        WHERE ReportID = ?
-    ");
+        SET "report_status" = ?, "Date_Resolved" = NULL
+        WHERE "ReportID" = ?
+    ');
 
     $stmt->execute([$status, $reportId]);
 }

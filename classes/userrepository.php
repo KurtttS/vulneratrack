@@ -4,7 +4,7 @@ class userrepository extends database {
 
     public function checkUser($email){
             $stmt = $this->getConnection()->prepare(
-                'SELECT 1 FROM `user` WHERE Email = ? LIMIT 1'
+                'SELECT 1 FROM "user" WHERE "Email" = ? LIMIT 1'
             );
 
             $stmt->execute([$email]);

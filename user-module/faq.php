@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP Gemini Chatbot</title>
+    <title>Vulneratrack FAQ Chatbot</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .chat-container { width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
@@ -22,52 +22,57 @@
     <div class="chat-box" id="chatBox">
         <div class="message bot-msg">Hello! How can I help you today?</div>
     </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
-        <button onclick="sendMessage()">Send</button>
-    </div>
+    <form class="input-area" id="chatForm">
+        <input type="text" id="userInput" placeholder="Type your message here..." autocomplete="off" required>
+        <button type="submit" id="sendButton">Send</button>
+    </form>
 </div>
 
 <script>
-    async function sendMessage() {
-        const inputField = document.getElementById('userInput');
+    const chatBox = document.getElementById('chatBox');
+    const chatForm = document.getElementById('chatForm');
+    const inputField = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    function appendMessage(text, className) {
+        const message = document.createElement('div');
+        message.className = `message ${className}`;
+        message.textContent = text;
+        chatBox.appendChild(message);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return message;
+    }
+
+    async function sendMessage(event) {
+        event.preventDefault();
         const messageText = inputField.value.trim();
         if (!messageText) return;
 
-        const chatBox = document.getElementById('chatBox');
-
-        // Append User Message to UI
-        chatBox.innerHTML += `<div class="message user-msg">${messageText}</div>`;
+        appendMessage(messageText, 'user-msg');
         inputField.value = '';
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        // Append "Typing..." placeholder
-        const typingId = 'typing-' + Date.now();
-        chatBox.innerHTML += `<div class="message bot-msg" id="${typingId}"><i>Typing...</i></div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+        sendButton.disabled = true;
+        const typingMessage = appendMessage('Typing...', 'bot-msg');
 
         try {
-            // Send payload to PHP Backend
             const response = await fetch('../processes/bot.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: messageText })
             });
-            
             const data = await response.json();
-            document.getElementById(typingId).innerHTML = data.reply || data.error;
+            typingMessage.textContent = response.ok && typeof data.reply === 'string'
+                ? data.reply
+                : (data.error || 'The chatbot could not answer right now. Please try again later.');
         } catch (error) {
-            document.getElementById(typingId).innerHTML = "Error connecting to backend.";
+            typingMessage.textContent = 'Unable to reach the chatbot service. Please try again later.';
+        } finally {
+            sendButton.disabled = false;
+            inputField.focus();
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
-        
-        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function handleKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    }
+    chatForm.addEventListener('submit', sendMessage);
 </script>
 
 </body>
