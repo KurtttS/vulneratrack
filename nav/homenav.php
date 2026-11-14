@@ -15,10 +15,12 @@
         <a href="home.php">Home</a>
         <a href="usermap.php">Map</a>
         <a href="report.php">Report</a>
-        <a href="faq.php">FAQ</a>
+        <a href="faq.php">Information</a>
         <a href="profile.php" class="mobile-only-profile">Profile</a>
         <a href="../index.php" class="mobile-only-profile">Sign Out</a>
     </nav>
+
+    
 
     <div class="homeheader-icons">
       <div class="notification-container">
