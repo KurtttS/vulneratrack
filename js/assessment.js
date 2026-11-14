@@ -284,7 +284,7 @@ function profmodup(message, type = "success") {
         const elderlyPoints = (parseInt(tally.elderly_count) * 3);
         const childPoints = (parseInt(tally.child_count) * 2);
 
-        document.querySelector('.houseassessment-data h3').innerText = "Household: " + tally.HouseholdID + " located at " + data.area_name;
+        document.querySelector('.houseassessment-data h3').innerText = "Household ID " + tally.HouseholdID + ": located at " + data.area_name;
 
         if (tally.pwd_count>0){
             container.innerHTML += `
