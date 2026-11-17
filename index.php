@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
 session_start();
-$googleClientId = appEnvironment(
-    'GOOGLE_CLIENT_ID',
-    '712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com'
-);
+$googleClientId = appEnvironment('GOOGLE_CLIENT_ID', '');
 ?>
 <!DOCTYPE html>
 <html lang="en">

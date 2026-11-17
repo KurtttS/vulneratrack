@@ -298,12 +298,16 @@ if (isset($_POST["signup_step1"]) && isset($_SESSION["signup"])) {
 
 if (isset($_POST["google_token"])) {
     $token = $_POST["google_token"];
-    $clientId = appEnvironment(
-        'GOOGLE_CLIENT_ID',
-        '712146024593-hg3e7qib2nck5p4br9gm5cl57mosphe1.apps.googleusercontent.com'
-    );
+    $clientId = appEnvironment('GOOGLE_CLIENT_ID');
 
-    if (!is_string($token) || $token === '' || strlen($token) > 16384 || !function_exists('curl_init')) {
+    if (
+        $clientId === null
+        || $clientId === ''
+        || !is_string($token)
+        || $token === ''
+        || strlen($token) > 16384
+        || !function_exists('curl_init')
+    ) {
         header("Location: ../index.php?error=googlelogin");
         exit();
     }

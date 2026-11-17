@@ -36,10 +36,11 @@ SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_REPORT_BUCKET=report-uploads
 GEMINI_API_KEY=
+GOOGLE_CLIENT_ID=
 APP_ENV=local
 ```
 
-Use your own development credentials. Do not commit `.env`, share the service-role key, or put secrets in browser code. `.env` is ignored by Git; `.env.example` is safe to commit because it contains placeholders.
+Set `GOOGLE_CLIENT_ID` to your Google OAuth client ID for Google sign-in. Use your own development credentials. Do not commit `.env`, share the service-role key, or put secrets in browser code. `.env` is ignored by Git; `.env.example` is safe to commit because it contains placeholders.
 
 ## 3. Prepare the Supabase database
 
