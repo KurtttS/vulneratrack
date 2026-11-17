@@ -324,6 +324,68 @@ select:focus {
     color: #777;
 }
 
+/* OTP – mobile number + Send OTP button (reuses .password-wrapper layout) */
+.signupstart-form .otp-wrapper input {
+    padding-left: 54px;
+    padding-right: 120px;
+}
+
+/* fixed +63 country code inside the number field */
+.signupstart-form .phone-prefix {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #333;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Continue stays visible but greyed out until the form is valid (tooltip lists what is missing) */
+.signupstart-form .btn.login.is-disabled {
+    opacity: 0.45;
+    filter: grayscale(1);
+    cursor: not-allowed;
+}
+
+.signupstart-form .otp-send-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #5c6bd6;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.signupstart-form .otp-send-btn:disabled {
+    background: #9aa1d9;
+    cursor: not-allowed;
+}
+
+.signupstart-form .otp-status {
+    width: 400px;
+    max-width: 100%;
+    margin: 0 0 4px;
+    font-size: 13px;
+    color: #c8f7d0;
+    text-align: left;
+}
+
+.signupstart-form .otp-status:empty {
+    display: none;
+}
+
+.signupstart-form .otp-status.error {
+    color: #ffd0cc;
+}
+
 /*file upload*/
 .file-container input[type="file"] {
     position: absolute;
