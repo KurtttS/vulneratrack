@@ -50,7 +50,6 @@
                 <option>PWD</option>
                 <option>Senior Citizen</option>
             </select>
-            <input type="text" name="contactnum"  placeholder="Contact Information" class="num" required>
             <div class="file-container area">
               <label for="birth-cert" class="file-label"  id="birthCertLabel"> Upload Birth Certificate <span>+</span></label>
               <input type="file" name="birthcert" id="birth-cert" required>

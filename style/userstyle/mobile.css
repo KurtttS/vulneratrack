@@ -121,8 +121,23 @@
         border: 1px solid #ddd !important; 
     }
 
+    /* Mobile number + Send OTP button: leave room for the button */
+    .signupstart-form .otp-wrapper input {
+        padding-left: 52px !important;
+        padding-right: 115px !important;
+    }
+
+    /* form sits on a white card on mobile, so use dark status colours */
+    .signupstart-form .otp-status {
+        color: #2e7d32;
+    }
+
+    .signupstart-form .otp-status.error {
+        color: #d93025;
+    }
+
     /* EyeCON*/
-    .login-form .password-wrapper i, 
+    .login-form .password-wrapper i,
     .signupstart-form .password-wrapper i {
         position: absolute; 
         right: 15px; 

@@ -40,6 +40,14 @@
 </div>
                
                 <input type="password" name="confirmpass" placeholder="Confirm Password" required>
+                <div class="password-wrapper otp-wrapper">
+                    <span class="phone-prefix">+63</span>
+                    <input type="tel" id="signupPhone" placeholder="9XX XXX XXXX" inputmode="numeric" pattern="9\d{9}" title="Enter your 10-digit mobile number, e.g. 9171234567" autocomplete="off" required>
+                    <input type="hidden" name="contactnum" id="contactnumFull">
+                    <button type="button" id="sendOtpBtn" class="otp-send-btn" disabled title="Enter your 10-digit mobile number first (e.g. 9171234567)">Send OTP</button>
+                </div>
+                <input type="text" id="otpInput" name="otp" placeholder="6-digit OTP code" inputmode="numeric" maxlength="6" pattern="\d{6}" title="Enter the 6-digit code sent to your mobile number" autocomplete="one-time-code" required>
+                <p id="otpStatus" class="otp-status" aria-live="polite"></p>
                 <div class="household-choice">
                     <p class="login-text" style="margin-bottom:8px;">Join or Create Household?</p>
                     <div class="choice-row">
@@ -52,7 +60,7 @@
                         <input type="text" id="joinCodeInput" name="joincode" placeholder="Insert code to join (ex. 2)">
                     </div>
                 </div>
-                <button type="submit" name="signup_step0" class="btn login">Continue</button>
+                <button type="submit" name="signup_step0" id="continueBtn" class="btn login">Continue</button>
             </form>
         </div>
     </div>

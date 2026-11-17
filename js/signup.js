@@ -346,8 +346,228 @@ document.addEventListener("DOMContentLoaded", function() {
         if (errorType === 'incorrectusername') {
             showModal("Registration Error", "Please use only letters for your name (2-50 characters).");
         }
+        if (errorType === 'invalidphone') {
+            showModal("Registration Error", "Please enter a valid PH mobile number (e.g. 09171234567).");
+        }
+        if (errorType === 'otprequired') {
+            showModal("Verification Required", "Please tap Send OTP and verify the mobile number you entered.");
+        }
+        if (errorType === 'otpexpired') {
+            showModal("OTP Expired", "Your OTP has expired. Please request a new one.");
+        }
+        if (errorType === 'otpwrong') {
+            showModal("Incorrect OTP", "The code you entered is incorrect. Please try again.");
+        }
+        if (errorType === 'otptoomany') {
+            showModal("Too Many Attempts", "Too many incorrect attempts. Please request a new OTP.");
+        }
     }
 });
+
+// Mobile number + OTP (PhilSMS) + Continue button state on the first signup step
+const signupStartForm = document.querySelector(".signupstart-form");
+const signupPhone = document.getElementById("signupPhone");
+const contactnumFull = document.getElementById("contactnumFull");
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const otpInput = document.getElementById("otpInput");
+const otpStatus = document.getElementById("otpStatus");
+const continueBtn = document.getElementById("continueBtn");
+
+if (signupStartForm && signupPhone && contactnumFull && sendOtpBtn && otpInput && otpStatus && continueBtn) {
+    const ROUTER_URL = "../router/loginregrouter.php";
+    let otpTimer = null;
+    let cooldownActive = false;
+    let sending = false;
+    let verifying = false;
+    let sentPhone = null;      // number an OTP was last sent to
+    let verifiedPhone = null;  // number whose OTP was confirmed by the server
+
+    const isPhoneValid = () => /^9\d{9}$/.test(signupPhone.value);
+    const isSent = () => sentPhone !== null && sentPhone === signupPhone.value;
+    const isVerified = () => verifiedPhone !== null && verifiedPhone === signupPhone.value;
+
+    function setOtpStatus(message, isError) {
+        otpStatus.textContent = message;
+        otpStatus.classList.toggle("error", !!isError);
+    }
+
+    // What is still needed before Continue can be used
+    function getMissing() {
+        const missing = [];
+        const email = signupStartForm.querySelector('[name="email"]');
+        const pass = signupStartForm.querySelector('[name="password"]');
+        const confirm = signupStartForm.querySelector('[name="confirmpass"]');
+
+        if (!email.value.trim() || !email.checkValidity()) missing.push("a valid email address");
+        if (!pass.value) missing.push("a password");
+        if (!confirm.value) missing.push("password confirmation");
+        else if (pass.value !== confirm.value) missing.push("matching passwords");
+
+        if (!isPhoneValid()) {
+            missing.push("a valid 10-digit mobile number (e.g. 9171234567)");
+        } else if (!isVerified()) {
+            if (!isSent()) missing.push("tap Send OTP to receive your code");
+            else if (otpInput.value.length < 6) missing.push("the 6-digit OTP code");
+            else missing.push("a correct OTP code");
+        }
+
+        const joinRadioEl = document.getElementById("joinRadio");
+        const createRadioEl = document.getElementById("createRadio");
+        const joinCodeEl = document.getElementById("joinCodeInput");
+        if (!joinRadioEl.checked && !createRadioEl.checked) missing.push("choose Join or Create household");
+        else if (joinRadioEl.checked && !joinCodeEl.value.trim()) missing.push("a household join code");
+
+        return missing;
+    }
+
+    function updateContinue() {
+        const missing = getMissing();
+        continueBtn.classList.toggle("is-disabled", missing.length > 0);
+        continueBtn.setAttribute("aria-disabled", missing.length > 0 ? "true" : "false");
+        continueBtn.title = missing.length > 0 ? "Still needed:\n• " + missing.join("\n• ") : "";
+    }
+
+    function updateSendBtn() {
+        const valid = isPhoneValid();
+        sendOtpBtn.disabled = !valid || cooldownActive || sending || verifying || isVerified();
+        sendOtpBtn.title = !valid ? "Enter your 10-digit mobile number first (e.g. 9171234567)" : "";
+    }
+
+    function refreshOtpUI() {
+        otpInput.readOnly = isVerified();
+        if (isVerified()) setOtpStatus("✓ Mobile number verified.", false);
+        updateSendBtn();
+        updateContinue();
+    }
+
+    function startOtpCooldown(seconds) {
+        clearInterval(otpTimer);
+        cooldownActive = true;
+        const tick = () => {
+            if (seconds <= 0) {
+                clearInterval(otpTimer);
+                cooldownActive = false;
+                sendOtpBtn.textContent = isSent() ? "Resend OTP" : "Send OTP";
+            } else {
+                sendOtpBtn.textContent = "Resend in " + seconds + "s";
+                seconds--;
+            }
+            updateSendBtn();
+        };
+        tick();
+        otpTimer = setInterval(tick, 1000);
+    }
+
+    // Phone: digits only, +63 is shown as a fixed prefix
+    signupPhone.addEventListener("input", function () {
+        let digits = this.value.replace(/\D/g, "");
+        if (digits.startsWith("63") && digits.length > 10) digits = digits.slice(2); // pasted 63917...
+        if (digits.startsWith("0")) digits = digits.slice(1);                        // pasted 0917...
+        digits = digits.slice(0, 10);
+        this.value = digits;
+        this.style.border = "";
+        contactnumFull.value = digits ? "+63" + digits : "";
+        setOtpStatus("", false);
+        refreshOtpUI();
+    });
+
+    // OTP code: digits only, checked against the server as soon as 6 digits are entered
+    otpInput.addEventListener("input", async function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 6);
+        this.style.border = "";
+        updateContinue();
+
+        if (this.value.length < 6) return;
+        if (!isSent()) {
+            setOtpStatus("Tap Send OTP to receive a code first.", true);
+            return;
+        }
+        if (isVerified() || verifying) return;
+
+        verifying = true;
+        updateSendBtn();
+        setOtpStatus("Checking code...", false);
+        try {
+            const response = await fetch(ROUTER_URL, {
+                method: "POST",
+                body: new URLSearchParams({ verify_otp: "1", contactnum: contactnumFull.value, otp: this.value })
+            });
+            const result = await response.json();
+            if (result.status === "success") {
+                verifiedPhone = signupPhone.value;
+            } else {
+                setOtpStatus(result.message || "Incorrect code.", true);
+                this.style.border = "2px solid #ff4d4d";
+                if (result.reset) {          // expired / too many tries: a new code is needed
+                    sentPhone = null;
+                    this.value = "";
+                    if (!cooldownActive) sendOtpBtn.textContent = "Send OTP";
+                }
+            }
+        } catch (err) {
+            console.error("OTP Verify Error:", err);
+            setOtpStatus("Network error. Please try again.", true);
+        }
+        verifying = false;
+        refreshOtpUI();
+    });
+
+    sendOtpBtn.addEventListener("click", async function () {
+        if (!isPhoneValid() || sendOtpBtn.disabled) return;
+
+        sending = true;
+        updateSendBtn();
+        sendOtpBtn.textContent = "Sending...";
+        setOtpStatus("", false);
+        const phone = signupPhone.value;
+
+        try {
+            const response = await fetch(ROUTER_URL, {
+                method: "POST",
+                body: new URLSearchParams({ send_otp: "1", contactnum: "+63" + phone })
+            });
+            const result = await response.json();
+            sending = false;
+
+            if (result.status === "success") {
+                sentPhone = phone;
+                verifiedPhone = null;
+                otpInput.value = "";
+                otpInput.style.border = "";
+                setOtpStatus(result.message, false);
+                startOtpCooldown(result.retry_after || 60);
+                otpInput.focus();
+            } else {
+                setOtpStatus(result.message || "Could not send the OTP.", true);
+                if (result.retry_after) {
+                    startOtpCooldown(result.retry_after);
+                } else {
+                    sendOtpBtn.textContent = isSent() ? "Resend OTP" : "Send OTP";
+                }
+            }
+        } catch (err) {
+            console.error("OTP Error:", err);
+            sending = false;
+            setOtpStatus("Network error. Please try again.", true);
+            sendOtpBtn.textContent = isSent() ? "Resend OTP" : "Send OTP";
+        }
+        refreshOtpUI();
+    });
+
+    // Continue is greyed out until everything is valid; clicking it early says what is missing
+    continueBtn.addEventListener("click", function (e) {
+        const missing = getMissing();
+        if (missing.length > 0) {
+            e.preventDefault();
+            showModal("Almost there", "Still needed: " + missing.join("; ") + ".");
+        }
+    });
+
+    signupStartForm.addEventListener("input", updateContinue);
+    signupStartForm.addEventListener("change", updateContinue);
+    refreshOtpUI();
+    setTimeout(updateContinue, 300); // pick up browser autofill
+}
 
 // Household Toggle Logic
 const joinRadio = document.getElementById("joinRadio");
