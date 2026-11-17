@@ -12,7 +12,7 @@ if (isset($_GET['action'])) {
 
         //Area cases
         case 'getAreaAssessment':
-            if (isset($_GET['areaID'])) {
+            if (isset($_GET['areaID'])) {   
                 $controller->areashow($_GET['areaID']);
             }
             break;
@@ -69,6 +69,10 @@ if (isset($_GET['action'])) {
                 $recipientString = implode(',', $recipients);
 
                 $apiKey = appEnvironment('PHILSMS_API_KEY');
+                if (!$apiKey) {
+                    echo json_encode(['status' => 'error', 'message' => 'PhilSMS API key is not configured']);
+                    break;
+                }
                 $message = "EMERGENCY ALERT: Your Household: HOUSEHOLD $householdID has been assessed as HIGH RISK. Please stay alert and follow local safety protocols immediately.";
 
                 $payload = [
@@ -109,7 +113,11 @@ if (isset($_GET['action'])) {
 
                 $recipientString = implode(',', $recipients);
 
-                $apiKey = "1872|yqvWwnu2f3SS1rGAIXdhWBGmkWpN74bs2Hk0kbaa969cc45a";
+                $apiKey = appEnvironment('PHILSMS_API_KEY');
+                if (!$apiKey) {
+                    echo json_encode(['status' => 'error', 'message' => 'PhilSMS API key is not configured']);
+                    break;
+                }
                 $message = "EMERGENCY ALERT: $alert warning for residents in your area. Please stay alert and follow local safety protocols immediately.";
 
                 $payload = [

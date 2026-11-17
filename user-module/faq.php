@@ -957,7 +957,7 @@ if (
                     </button>
 
                     <button type="button" class="suggested-question">
-                        When is it safe to evacuate?
+                        How do you calcualte vulnerability points and what are the factors that affect it?
                         <i class="fas fa-arrow-up-right-from-square"></i>
                     </button>
 
