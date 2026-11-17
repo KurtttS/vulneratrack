@@ -9,9 +9,8 @@ include '../processes/statsctrl.php';
 /* ==========================================
    1. NEWSDATA.IO CONFIGURATION
 ========================================== */
-
 $baseUrl = "https://newsdata.io/api/1/latest";
-$apiKey = appEnvironment('NEWSDATA_API_KEY', 'pub_2135fe9265584955927654269ec21ae2');
+$apiKey = appEnvironment('NEWSDATA_API_KEY');
 
 $params = [
     'apikey'   => $apiKey,
