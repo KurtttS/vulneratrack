@@ -472,6 +472,29 @@ if (
             border-bottom-left-radius: 4px;
         }
 
+        .chat-box .bot-msg > :first-child {
+            margin-top: 0;
+        }
+
+        .chat-box .bot-msg > :last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-box .bot-msg p,
+        .chat-box .bot-msg ul,
+        .chat-box .bot-msg ol {
+            margin: 0 0 0.75em;
+        }
+
+        .chat-box .bot-msg ul,
+        .chat-box .bot-msg ol {
+            padding-left: 1.5em;
+        }
+
+        .chat-box .bot-msg a {
+            color: var(--accent);
+        }
+
         .chat-box .welcome-msg {
             max-width: 100%;
             width: 100%;
@@ -952,12 +975,12 @@ if (
                     </button>
 
                     <button type="button" class="suggested-question">
-                        What should I include in an emergency kit?
+                        What areas does Vulneratrack cover and how can I report a flood risk?
                         <i class="fas fa-arrow-up-right-from-square"></i>
                     </button>
 
                     <button type="button" class="suggested-question">
-                        How do you calcualte vulnerability points and what are the factors that affect it?
+                        What is Vulneratrack's objective?
                         <i class="fas fa-arrow-up-right-from-square"></i>
                     </button>
 
@@ -1177,11 +1200,9 @@ if (
     </main>
 
 
-    <!-- ==========================================
-         ORIGINAL CHATBOT JAVASCRIPT
-         LEFT UNCHANGED
-    ========================================== -->
-
+    <!-- CHATBOT JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.2.1/lib/marked.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.18/dist/purify.min.js"></script>
     <script>
         const chatBox = document.getElementById('chatBox');
         const chatForm = document.getElementById('chatForm');
@@ -1195,6 +1216,15 @@ if (
             chatBox.appendChild(message);
             chatBox.scrollTop = chatBox.scrollHeight;
             return message;
+        }
+
+        function renderBotReply(element, text) {
+            if (window.marked && window.DOMPurify) {
+                element.innerHTML = window.DOMPurify.sanitize(window.marked.parse(text));
+                return;
+            }
+
+            element.textContent = text;
         }
 
         async function sendMessage(event) {
@@ -1214,9 +1244,11 @@ if (
                     body: JSON.stringify({ message: messageText })
                 });
                 const data = await response.json();
-                typingMessage.textContent = response.ok && typeof data.reply === 'string'
-                    ? data.reply
-                    : (data.error || 'The chatbot could not answer right now. Please try again later.');
+                if (response.ok && typeof data.reply === 'string') {
+                    renderBotReply(typingMessage, data.reply);
+                } else {
+                    typingMessage.textContent = data.error || 'The chatbot could not answer right now. Please try again later.';
+                }
             } catch (error) {
                 typingMessage.textContent = 'Unable to reach the chatbot service. Please try again later.';
             } finally {

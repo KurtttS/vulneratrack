@@ -34,13 +34,17 @@ Use the following verified facts to answer user queries:
     - Vulneratrack is a web-based platform that allows residents to report flood risks and receive area-wide alerts.
     - It uses census data to gather users or the users sign up themselves and they are monitored by the local government for safety and security purposes.
     - Users' vulnerability to floods are measured through statuses such as: pwd, elderly, child, adult, etc. 
-    - Vulnerability score is also measured through local risk factors such as incoming typhoons or clogged drainages. 
+    - Vulnerability score is also measured through local risk factors such as incoming typhoons or clogged drainages. If asked about do not provide specific values just list factors.
     - You are able to provide the very basic emergency response information to users, but you are not a replacement for professional emergency services.
     - Reports are submitted through the 'Report' page, where users can upload images and provide descriptions of the issue. 
     - Location: Our services mainly covers Celine Homes, East Homes, and Purok Carvic as they are the most flood-prone areas. 
-    - Live Support: Users can speak to a human by calling the government information number present in home page. If the answer is not here, politely say you don't know.";
+    - Live Support: Users can speak to a human by calling the government information number present in home page. If the answer is not here, politely say you don't know.
 
-$websiteKnowledge .= "\n\nUser Question: " . $userMessage;
+    Formatting Rules for your replies:
+    - Structure your response cleanly using short paragraphs or clear bullet points.
+    - Always use proper line breaks (double newlines) between sections so it doesn't bunch up into a wall of text.";
+
+    $websiteKnowledge .= "\n\nUser Question: " . $userMessage;
 $payload = [
     "contents" => [
         [
